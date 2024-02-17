@@ -1,9 +1,10 @@
 {
-  "name": "node-red-contrib-web-of-things",
+  "name": "@eclipse-thingweb/node-red-node-wot",
   "version": "2.0.0-beta.6",
-  "description": "Web of Things node for node-RED.",
-  "author": "hassib.belhaj_hassine@siemens.com",
+  "description": "Web of Things nodes for Node-RED using node-wot",
+  "author": "Eclipse Thingweb <thingweb-dev@eclipse.org> (https://thingweb.io/)",
   "contributors": [
+    "Hassib Belhaj <hassib.belhaj_hassine@siemens.com>",
     "Adel Fatkhutdinov <fatkhu01@ads.uni-passau.de>",
     "hidetak"
   ],
@@ -17,9 +18,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thingweb/node-red-contrib-web-of-things"
+    "url": "https://github.com/eclipse-thingweb/node-red"
   },
-  "homepage": "https://github.com/thingweb/node-red-contrib-web-of-things/blob/master/README.md",
+  "homepage": "https://github.com/eclipse-thingweb/node-red/blob/main/node-red-node-wot/README.md",
   "node-red": {
     "nodes": {
       "wot-thing": "dist/wot-thing.js",
