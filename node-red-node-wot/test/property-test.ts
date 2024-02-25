@@ -177,6 +177,14 @@ describe('Tests for WoT Property', function () {
   this.timeout(15 * 1000)
   before(async function () {
     await startFlow(targetFlow, helper)
+    countPropertyValue = 1
+    const serverReadPropertyHelperNode = helper.getNode('id.serverreadpropertyhelper01')
+    serverReadPropertyHelperNode.removeAllListeners('input')
+    serverReadPropertyHelperNode.on('input', function (msg, send, done) {
+      msg.payload = countPropertyValue
+      send(msg)
+      done()
+    })
   })
 
   after(async function () {
@@ -192,14 +200,6 @@ describe('Tests for WoT Property', function () {
   })
 
   it('read property', function (done) {
-    countPropertyValue = 1
-    const serverHelperNode = helper.getNode('id.serverreadpropertyhelper01')
-    serverHelperNode.removeAllListeners('input')
-    serverHelperNode.on('input', function (msg, send, done) {
-      msg.payload = countPropertyValue
-      send(msg)
-      done()
-    })
     const clientHelperNode = helper.getNode('id.readpropertyhelper01')
     clientHelperNode.removeAllListeners('input')
     clientHelperNode.on('input', function (msg) {

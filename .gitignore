@@ -1,7 +1,5 @@
-/node_modules
+node_modules
 .idea/
 .vscode/settings.json
 .DS_Store
-/dist
-/memo
-
+dist
