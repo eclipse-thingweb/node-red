@@ -9,5 +9,8 @@
         "ecmaVersion": 8
     },
     "extends": ["eslint:recommended", "prettier"],
-    "ignorePatterns": ["dist", "node_modules", "bin"]
+    "ignorePatterns": ["dist", "node_modules", "bin"],
+    "rules":{
+        "no-constant-condition": ["error", { "checkLoops": false }]
+    }
 }

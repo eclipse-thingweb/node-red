@@ -66,7 +66,7 @@ module.exports = function (RED) {
               break
             }
             await (() => {
-              return new Promise((resolve, reject) => {
+              return new Promise((resolve) => {
                 setTimeout(() => {
                   resolve()
                 }, 500)

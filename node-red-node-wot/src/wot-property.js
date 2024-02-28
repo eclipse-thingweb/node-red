@@ -68,7 +68,7 @@ module.exports = function (RED) {
           break
         }
         await (() => {
-          return new Promise((resolve, reject) => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               resolve()
             }, 500)
@@ -114,11 +114,13 @@ module.exports = function (RED) {
     })
 
     node.on('close', function () {
+      // eslint-disable-next-line
       if (removed) {
         // This node has been deleted
       } else {
         // This node is being restarted
       }
+      // eslint-disable-next-line
       done()
     })
   }
