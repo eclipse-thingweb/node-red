@@ -1,39 +1,39 @@
 <script type="text/javascript">
-    RED.nodes.registerType("invoke-action",{
+    RED.nodes.registerType("invoke-action", {
         category: "Web of Things",
         color: "#5fa2a2",
         defaults: {
-            name: {value:""},
-            topic: {value: ""},
-            thing: {value:"", type: "consumed-thing", required: true},
-            action: {value: "", required: true},
-            uriVariables: {value: ""}
+            name: { value: "" },
+            topic: { value: "" },
+            thing: { value: "", type: "consumed-thing", required: true },
+            action: { value: "", required: true },
+            uriVariables: { value: "" },
         },
         inputs: 1,
         outputs: 1,
         icon: "arrow-in.png",
         paletteLabel: "Invoke Action",
         align: "right",
-        label: function() {
+        label: function () {
             if (this.name) {
                 return this.name
             } else if (this.action) {
                 return "Action: " + this.action
             } else {
-                return "invoke-action";
+                return "invoke-action"
             }
         },
-        oneditprepare: function() {
-            let node = this;
+        oneditprepare: function () {
+            let node = this
 
             $("#node-input-uriVariables").typedInput({
-                type:"json",
-                types:["json"]
-            });
+                type: "json",
+                types: ["json"],
+            })
 
             // Should be hidden only after typedInput is created
             // Otherwise the json input field for uriVariables is not drawn properly
-            $("div#action-row").hide();
+            $("div#action-row").hide()
 
             $("select#node-input-thing").change(function () {
                 if ($("select#node-input-thing").val() !== "_ADD_") {
@@ -44,25 +44,25 @@
             })
 
             function showOptions() {
-                let thingID = $("select#node-input-thing").val();
+                let thingID = $("select#node-input-thing").val()
                 if (thingID) {
                     RED.nodes.eachConfig((config) => {
                         if (config.id === thingID && config.td) {
                             // delete old actions
-                            let select = document.getElementById("node-input-action");
-                            while (select.firstChild) select.removeChild(select.firstChild);
+                            let select = document.getElementById("node-input-action")
+                            while (select.firstChild) select.removeChild(select.firstChild)
                             // Populate with new actions
-                            let indx = 0;
-                            Object.keys(JSON.parse(config.td).actions || {}).forEach(action => {
-                                let opt = document.createElement('option');
-                                opt.value = action;
-                                opt.innerHTML = action;
-                                select.appendChild(opt);
+                            let indx = 0
+                            Object.keys(JSON.parse(config.td).actions || {}).forEach((action) => {
+                                let opt = document.createElement("option")
+                                opt.value = action
+                                opt.innerHTML = action
+                                select.appendChild(opt)
                                 if (action === node.action) {
                                     select.selectedIndex = indx
                                 }
-                                indx++;
-                            });
+                                indx++
+                            })
                             // Show containing div
                             if (!select.firstChild) {
                                 $("div#action-row").text("ConsumedThing has no actions")
@@ -74,12 +74,12 @@
             }
 
             function hideOptions() {
-                let select = document.getElementById("node-input-action").innerText = ""
+                let select = (document.getElementById("node-input-action").innerText = "")
                 node.action = ""
                 $("div#action-row").hide()
             }
-        }
-    });
+        },
+    })
 </script>
 
 <script type="text/x-red" data-template-name="invoke-action">
