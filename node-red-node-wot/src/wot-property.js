@@ -113,14 +113,12 @@ module.exports = function (RED) {
                 })
         })
 
-        node.on("close", function () {
-            // eslint-disable-next-line
+        node.on("close", function (removed, done) {
             if (removed) {
                 // This node has been deleted
             } else {
                 // This node is being restarted
             }
-            // eslint-disable-next-line
             done()
         })
     }

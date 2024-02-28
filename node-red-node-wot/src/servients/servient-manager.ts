@@ -24,21 +24,21 @@ export default class ServientManager {
         return false
     }
     public async removeServientWrapper(id: string) {
-        console.debug("[debug] removeServientWrapper. id: ", id)
+        console.debug("[debug] removeServientWrapper. id: " + id)
         await this.endServient(id)
         delete this.servientWrappers[id]
     }
 
     private async endServient(id: string) {
         return new Promise<void>(async (resolve, reject) => {
-            console.debug("[debug] call endServient. id: ", id)
+            console.debug("[debug] endServient called. id: " + id)
             const servientWrapper = this.servientWrappers[id]
             const timeoutId = setTimeout(() => {
-                console.warn("[warn] timeout happend while servient ending.", id)
+                console.warn("[warn] timeout happend while servient ending. id: " + id)
                 resolve()
             }, 10000) // If it does not end after 10 seconds, it is considered to be finished.
             await servientWrapper.endServient()
-            console.debug("[debug] servient ended. id: ", id)
+            console.debug("[debug] servient ended. id: " + id)
             clearTimeout(timeoutId)
             resolve()
         })

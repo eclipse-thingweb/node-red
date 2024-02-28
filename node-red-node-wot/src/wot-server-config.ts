@@ -194,60 +194,47 @@ module.exports = function (RED) {
             }
         }
 
-        if (servientManager.existServienetWrapper(node.id)) {
-            // Exit if already servient.
-            console.debug("[debug] endServient. node.id: ", node.id)
-            servientManager
-                .removeServientWrapper(node.id)
-                .then(() => {
-                    // end servient
-                    console.debug("[debug] servient ended. config.id: ", config.id)
-                    launchServient()
-                        .then(() => {
-                            node.debug(
-                                "[debug] success to end and launch thing. name: " + config.name + " id: " + config.id
-                            )
-                        })
-                        .catch((err) => {
-                            node.error(
-                                "[error] Failed to launch thing. name: " +
-                                    config.name +
-                                    " id: " +
-                                    config.id +
-                                    " err:" +
-                                    err
-                            )
-                            console.error(
-                                "[error] Failed to launch thing. name: " + config.name + " id: " + config.id + " err: ",
+        console.debug("[debug] launch servient. node.id: ", node.id)
+        launchServient()
+            .then(() => {
+                node.debug("[info] success to launch thing. name: " + config.name + " id: " + config.id)
+            })
+            .catch((err) => {
+                node.error("[error] Failed to launch thing. name: " + config.name + " id: " + config.id + " err:" + err)
+                console.error(
+                    "[error] Failed to launch thing. name: " + config.name + " id: " + config.id + " err: ",
+                    err
+                )
+            })
+
+        node.on("close", function (removed, done) {
+            if (servientManager.existServienetWrapper(node.id)) {
+                // Exit if already servient.
+                console.debug("[debug] endServient. node.id: " + node.id)
+                servientManager
+                    .removeServientWrapper(node.id)
+                    .then(() => {
+                        // end servient
+                        console.debug("[debug] servient ended. config.id: " + config.id)
+                        done()
+                    })
+                    .catch((err) => {
+                        node.error(
+                            "[error] failed to remove server. name: " +
+                                config.name +
+                                " id: " +
+                                config.id +
+                                " err: " +
                                 err
-                            )
-                        })
-                })
-                .catch((err) => {
-                    node.error(
-                        "[error] failed to remove server. name: " + config.name + " id: " + config.id + " err: " + err
-                    )
-                    console.error(
-                        "[error] failed to remove server. name: " + config.name + " id: " + config.id + " err: ",
-                        err
-                    )
-                })
-        } else {
-            console.debug("[debug] launch servient. node.id: ", node.id)
-            launchServient()
-                .then(() => {
-                    node.debug("[info] success to launch thing. name: " + config.name + " id: " + config.id)
-                })
-                .catch((err) => {
-                    node.error(
-                        "[error] Failed to launch thing. name: " + config.name + " id: " + config.id + " err:" + err
-                    )
-                    console.error(
-                        "[error] Failed to launch thing. name: " + config.name + " id: " + config.id + " err: ",
-                        err
-                    )
-                })
-        }
+                        )
+                        console.error(
+                            "[error] failed to remove server. name: " + config.name + " id: " + config.id + " err: ",
+                            err
+                        )
+                        done(err)
+                    })
+            }
+        })
     }
 
     RED.nodes.registerType("wot-server-config", WoTServerConfig, {
