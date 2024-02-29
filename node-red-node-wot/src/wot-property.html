@@ -1,102 +1,103 @@
 <script type="text/javascript">
-    RED.nodes.registerType("read-property",{
+    RED.nodes.registerType("read-property", {
         category: "Web of Things",
         color: "#5fa2a2",
         defaults: {
-            name: {value:""},
-            topic: {value:""},
-            thing: {value:"", type: "consumed-thing", required: true},
-            property: {value: "", required: true},
-            uriVariables: {value: ""},
-            observe: {value: false}
+            name: { value: "" },
+            topic: { value: "" },
+            thing: { value: "", type: "consumed-thing", required: true },
+            property: { value: "", required: true },
+            uriVariables: { value: "" },
+            observe: { value: false },
         },
-        inputs:1,
-        outputs:1,
+        inputs: 1,
+        outputs: 1,
         icon: "arrow-in.png",
         paletteLabel: "Read Property",
         align: "left",
-        label: function() {
+        label: function () {
             if (this.name) {
                 return this.name
             } else if (this.property) {
                 return "Property: " + this.property
             } else {
-                return "read-property";
+                return "read-property"
             }
         },
-        oneditprepare: function() {
-            let node = this;
+        oneditprepare: function () {
+            let node = this
 
             $("#node-input-uriVariables").typedInput({
-                type:"json",
-                types:["json"]
-            });
+                type: "json",
+                types: ["json"],
+            })
 
             // Should be hidden only after typedInput is created
             // Otherwise the json input field for uriVariables is not drawn properly
-            $("div#property-row").hide();
+            $("div#property-row").hide()
 
             $("#node-input-property").change(function () {
-                let property = this.value;
-                let thingID = $("select#node-input-thing").val();
+                let property = this.value
+                let thingID = $("select#node-input-thing").val()
                 if (thingID) {
                     RED.nodes.eachConfig((config) => {
                         if (config.id === thingID && config.td) {
-                            let properties = JSON.parse(config.td).properties || {};
+                            let properties = JSON.parse(config.td).properties || {}
                             if (properties[property] && properties[property].observable) {
-                                $("div#property-observe").show();
+                                $("div#property-observe").show()
                             } else {
-                                $("div#property-observe").hide();
+                                $("div#property-observe").hide()
                             }
                         }
                     })
-            }});
+                }
+            })
 
             $("select#node-input-thing").change(function () {
                 if (this.value !== "_ADD_") {
-                    showOptions();
+                    showOptions()
                 } else {
-                    hideOptions();
+                    hideOptions()
                 }
-            });
+            })
 
             function showOptions() {
-                let thingID = $("select#node-input-thing").val();
+                let thingID = $("select#node-input-thing").val()
                 if (thingID) {
                     RED.nodes.eachConfig((config) => {
                         if (config.id === thingID && config.td) {
                             // parse TD
                             let properties = JSON.parse(config.td).properties || {}
                             // delete old properties
-                            let select = document.getElementById("node-input-property");
-                            while (select.firstChild) select.removeChild(select.firstChild);
+                            let select = document.getElementById("node-input-property")
+                            while (select.firstChild) select.removeChild(select.firstChild)
                             // Populate with new properties
-                            let indx = 0;
-                            Object.keys(properties).forEach(property => {
-                                if (properties[property].writeOnly) return;
-                                let opt = document.createElement('option');
-                                opt.value = property;
-                                opt.innerHTML = property;
-                                select.appendChild(opt);
+                            let indx = 0
+                            Object.keys(properties).forEach((property) => {
+                                if (properties[property].writeOnly) return
+                                let opt = document.createElement("option")
+                                opt.value = property
+                                opt.innerHTML = property
+                                select.appendChild(opt)
                                 if (property === node.property) {
-                                    select.selectedIndex = indx;
+                                    select.selectedIndex = indx
                                 }
-                                indx++;
-                            });
+                                indx++
+                            })
                             // Show containing div
-                            $("div#property-row").show();
+                            $("div#property-row").show()
                         }
                     })
                 }
             }
 
             function hideOptions() {
-                let select = document.getElementById("node-input-property").innerText = "";
-                node.property = "";
-                $("div#property-row").hide();
+                let select = (document.getElementById("node-input-property").innerText = "")
+                node.property = ""
+                $("div#property-row").hide()
             }
-        }
-    });
+        },
+    })
 </script>
 
 <script type="text/x-red" data-template-name="read-property">
@@ -132,92 +133,91 @@
     <p>A node that reads a WoT property and returns the received data.</p>
 </script>
 
-
 <script type="text/javascript">
-    RED.nodes.registerType("write-property",{
+    RED.nodes.registerType("write-property", {
         category: "Web of Things",
         color: "#5fa2a2",
         defaults: {
-            name: {value:""},
-            topic: {value:""},
-            thing: {value:"", type: "consumed-thing", required: true},
-            property: {value: "", required: true},
-            uriVariables: {value: ""}
+            name: { value: "" },
+            topic: { value: "" },
+            thing: { value: "", type: "consumed-thing", required: true },
+            property: { value: "", required: true },
+            uriVariables: { value: "" },
         },
-        inputs:1,
-        outputs:0,
+        inputs: 1,
+        outputs: 0,
         icon: "arrow-in.png",
         paletteLabel: "Write Property",
         align: "right",
-        label: function() {
+        label: function () {
             if (this.name) {
                 return this.name
             } else if (this.property) {
                 return "Property: " + this.property
             } else {
-                return "write-property";
+                return "write-property"
             }
         },
-        oneditprepare: function() {
-            let node = this;
+        oneditprepare: function () {
+            let node = this
 
             $("#node-input-uriVariables").typedInput({
-                type:"json",
-                types:["json"]
-            });
+                type: "json",
+                types: ["json"],
+            })
 
             // Should be hidden only after typedInput is created
             // Otherwise the json input field for uriVariables is not drawn properly
-            $("div#property-write-row").hide();
+            $("div#property-write-row").hide()
 
             $("select#node-input-thing").change(function () {
                 if (this.value !== "_ADD_") {
-                    showOptions();
+                    showOptions()
                 } else {
-                    hideOptions();
+                    hideOptions()
                 }
-            });
+            })
 
             function showOptions() {
-                let thingID = $("select#node-input-thing").val();
+                let thingID = $("select#node-input-thing").val()
                 if (thingID) {
                     RED.nodes.eachConfig((config) => {
                         if (config.id === thingID && config.td) {
                             // parse TD
                             let properties = JSON.parse(config.td).properties || {}
                             // delete old properties
-                            let select = document.getElementById("node-input-property");
-                            while (select.firstChild) select.removeChild(select.firstChild);
+                            let select = document.getElementById("node-input-property")
+                            while (select.firstChild) select.removeChild(select.firstChild)
                             // Populate with properties
-                            let indx = 0;
-                            Object.keys(properties).forEach(property => {
-                                if (properties[property].readOnly) return;
-                                let opt = document.createElement('option');
-                                opt.value = property;
-                                opt.innerHTML = property;
-                                select.appendChild(opt);
+                            let indx = 0
+                            Object.keys(properties).forEach((property) => {
+                                if (properties[property].readOnly) return
+                                let opt = document.createElement("option")
+                                opt.value = property
+                                opt.innerHTML = property
+                                select.appendChild(opt)
                                 if (property === node.property) {
-                                    select.selectedIndex = indx;
+                                    select.selectedIndex = indx
                                 }
-                                indx++;
-                            });
+                                indx++
+                            })
                             // Show containing div
                             if (!select.firstChild) {
                                 $("div#property-write-row").text("ConsumedThing has no writable properties")
                             }
-                            $("div#property-write-row").show();
+                            $("div#property-write-row").show()
                         }
                     })
                 }
             }
 
             function hideOptions() {
-                let select = document.getElementById("node-input-property").innerText = "";
-                node.property = "";
-                $("div#property-write-row").hide();
+                let select = (document.getElementById("node-input-property").innerText = "")
+                node.property = ""
+                $("div#property-write-row").hide()
             }
-        }
-    });
+        },
+    })
 </script>
 
 <script type="text/x-red" data-template-name="write-property">
