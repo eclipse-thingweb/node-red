@@ -1,0 +1,25 @@
+name: node-red-node-wot test
+
+on:
+    pull_request:
+        types: [opened, reopened, synchronize, ready_for_review]
+
+jobs:
+    Test:
+        name: Run test codes
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: node-red-node-wot
+        steps:
+            - uses: actions/checkout@v3
+            - name: Install and cache nodejs
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20"
+                  cache: "npm"
+                  cache-dependency-path: "**/package-lock.json"
+            - name: Install packages
+              run: npm install
+            - name: Show coverage
+              run: npm test -- --bail --maxWorkers=100% --watchAll=false --coverage

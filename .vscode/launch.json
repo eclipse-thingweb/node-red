@@ -1,0 +1,14 @@
+{
+// Launch configurations: see https://go.microsoft.com/fwlink/?linkid=830387  "version": "0.2.0",
+  "configurations": [
+
+    {
+      "type": "node",
+      "cwd":"${workspaceFolder}/node-red-node-wot/",
+      "request": "launch",
+      "name": "Run Test",
+      "program": "${workspaceFolder}/node-red-node-wot/node_modules/mocha/bin/_mocha",
+      "args": ["--require", "ts-node/register", "--extension", "ts", "--exit"]
+    }
+  ]
+}
