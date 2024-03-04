@@ -1,6 +1,6 @@
 {
   "name": "@thingweb/node-red-node-wot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Web of Things nodes for Node-RED using node-wot",
   "author": "Eclipse Thingweb <thingweb-dev@eclipse.org> (https://thingweb.io/)",
   "license": "MIT",
@@ -31,7 +31,8 @@
       "wot-server-property": "dist/wot-server-property.js",
       "wot-server-action": "dist/wot-server-action.js",
       "wot-server-event": "dist/wot-server-event.js"
-    }
+    },
+    "version":">=2.0.0"
   },
   "scripts": {
     "build": "npm run copy:src2dist && tsc",
