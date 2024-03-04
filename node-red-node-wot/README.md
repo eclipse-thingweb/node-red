@@ -2,9 +2,9 @@
 
 A [Node-RED](https://nodered.org/) package of nodes for the [Web of Things](https://www.w3.org/WoT/).
 
-Can be installed from the Node-RED palette manager directly or via npm (see [the npm package](https://www.npmjs.com/package/node-red-contrib-web-of-things)).
+Can be installed from the Node-RED palette manager directly or via npm (see [the npm package](https://www.npmjs.com/package/@thingweb/node-red-node-wot)).
 The package provides nodes that can communicate with any HTTP/HTTPS, WebSocket, CoAP/CoAPS, MQTT, OPC UA, and Modbus device based on its [W3C WoT Thing Description](https://www.w3.org/TR/wot-thing-description/).
-The package is built upon [node-wot](https://github.com/eclipse-thingweb/node-wot) runtime environment.
+The package is built upon the [node-wot](https://github.com/eclipse-thingweb/node-wot) runtime environment.
 
 ## Provided Nodes
 
@@ -26,7 +26,7 @@ Those nodes are as follows and needed to interact with different interaction aff
 
 ### Consume Things
 
-In order to consume a Thing and interact with it, drag and drop one of the interaction nodes to a flow.
+To consume a Thing and interact with it, drag and drop one of the interaction nodes to a flow.
 Then double click on that node.
 Inside the opened window click the pencil icon next to _Add new consumed-thing_ dropdown.
 
@@ -67,15 +67,15 @@ Subscribing to an event is pretty much the same as reading a property.
 
 Overall, a basic flow may look like this.
 
-![Flow Example](screenshots/flow-example.png)
+![Flow Example](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/flow-example.png)
 
 ### Expose Things
 
-To expose a Thing, firstly, drag & drop one of the nodes belonging to the Thing, either Property(Server-Property), Action(Server-Action), or Event(Server-Event) to the canvas. 
+To expose a Thing, firstly, drag & drop one of the nodes belonging to the Thing, either Property(Server-Property), Action(Server-Action), or Event(Server-Event) to the canvas.
 
 When you double-click on that node, a property screen appears.
 
-![Property Screen](screenshots/server-property-settings.png)
+![Property Screen](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/server-property-settings.png)
 
 On the properties screen, the `Server config` and `Thing config` must be configured. The roles of each config are as follows:
 
@@ -86,7 +86,7 @@ By performing `Server config` and `Thing config` in the Server-Property, Server-
 
 If you create a new server config on the properties screen, the following screen will appear.
 
-![Server Config Screen](screenshots/server-config-settings.png)
+![Server Config Screen](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/server-config-settings.png)
 
 Perform the following settings:
 
@@ -96,7 +96,7 @@ Perform the following settings:
 
 If you create a new thing config on the properties screen, the following screen will appear.
 
-![Thing Config Screen](screenshots/thing-config-settings.png)
+![Thing Config Screen](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/thing-config-settings.png)
 
 Specify the Thing title. The Thing title will be included in the Thing Description.
 
@@ -109,12 +109,12 @@ Flows connected to the two output terminals of the Server-Property node (read/wr
 
 Here's an example of a flow:
 
-![Server Flow Example](screenshots/server-flow-example.png)
+![Server Flow Example](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/server-flow-example.png)
 
 The Thing Description required when the client uses a Thing is set in the thingDescriptions object of the global context. The member name is `<server name>::<Thing title>`.
 If you want to check the Thing Description, open the Context Data tab of the Node-RED editor and press the refresh icon of the Global context to display it.
 
-![Reference TD](screenshots/reference-td.png)
+![Reference TD](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/reference-td.png)
 
 Currently, the supported binding types are HTTP, CoAP, and MQTT. As shown in the table below, each of these types of bindings has its own available/unavailable functions. Available functions are denoted by `✓` and unavailable functions are denoted by `-`.
 
