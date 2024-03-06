@@ -1,13 +1,8 @@
 {
-  "name": "@eclipse-thingweb/node-red-node-wot",
-  "version": "1.0.0",
+  "name": "@thingweb/node-red-node-wot",
+  "version": "1.0.1",
   "description": "Web of Things nodes for Node-RED using node-wot",
   "author": "Eclipse Thingweb <thingweb-dev@eclipse.org> (https://thingweb.io/)",
-  "contributors": [
-    "Hassib Belhaj <hassib.belhaj_hassine@siemens.com>",
-    "Adel Fatkhutdinov <fatkhu01@ads.uni-passau.de>",
-    "hidetak"
-  ],
   "license": "MIT",
   "keywords": [
     "internet-of-things",
@@ -37,7 +32,8 @@
       "wot-server-action": "dist/wot-server-action.js",
       "wot-server-event": "dist/wot-server-event.js",
       "wot-server-td": "dist/wot-server-td.js"
-    }
+    },
+    "version":">=2.0.0"
   },
   "scripts": {
     "build": "npm run copy:src2dist && tsc",

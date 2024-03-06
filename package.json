@@ -1,5 +1,5 @@
 {
-  "name": "@eclipse-thingweb/node-red",
+  "name": "@thingweb/node-red",
   "version": "1.0.0",
   "description": "Web of Things nodes for Node-RED from Eclipse Thingweb (root project, not published)",
   "author": "Eclipse Thingweb <thingweb-dev@eclipse.org> (https://thingweb.io/)",

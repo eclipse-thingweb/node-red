@@ -37,10 +37,16 @@ export default class ServientManager {
                 console.warn("[warn] timeout happend while servient ending. id: " + id)
                 resolve()
             }, 10000) // If it does not end after 10 seconds, it is considered to be finished.
-            await servientWrapper.endServient()
-            console.debug("[debug] servient ended. id: " + id)
-            clearTimeout(timeoutId)
-            resolve()
+            try {
+                await servientWrapper.endServient()
+                console.debug("[debug] servient ended. id: " + id)
+                clearTimeout(timeoutId)
+                resolve()
+            } catch (err) {
+                console.debug("[debug] failed to end servient. id: " + id + " error: " + err.toString())
+                clearTimeout(timeoutId)
+                reject(err)
+            }
         })
     }
 
