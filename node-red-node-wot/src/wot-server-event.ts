@@ -67,12 +67,12 @@ module.exports = function (RED) {
             done()
         })
 
-        const woTServerConfig = RED.nodes.getNode(config.woTServerConfig) //test
+        const woTServerConfig = RED.nodes.getNode(config.woTServerConfig)
         woTServerConfig?.addUserNode(node)
     }
     RED.nodes.registerType("wot-server-event", WoTServerEvent, {
         credentials: {
-            inParams_propertyName: { type: "text" },
+            inParams_eventValue: { type: "text" },
         },
     })
 

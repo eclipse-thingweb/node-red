@@ -1,0 +1,161 @@
+<script type="text/javascript">
+    ;(() => {
+        RED.nodes.registerType("wot-server-td", {
+            category: "Web of Things",
+            color: "#a2dea0",
+            defaults: {
+                name: { value: "" },
+                outParams1_tdType: {
+                    value: "msg",
+                },
+                outParams1_tdConstValue: {
+                    value: "payload",
+                },
+                woTServerConfig: {
+                    type: "wot-server-config",
+                    value: "",
+                    required: true,
+                },
+                woTThingConfig: {
+                    type: "wot-thing-config",
+                    value: "",
+                    required: true,
+                },
+                outputTDAfterServerStartFlag: {
+                    value: true,
+                    required: true,
+                },
+            },
+            credentials: {
+                outParams1_td: { type: "text" },
+            },
+            inputs: 1,
+            outputs: 1,
+            icon: "arrow.png",
+            label: function () {
+                return this.name || this._("editor.paletteLabel") || "wot-server-td"
+            },
+            labelStyle: function () {
+                return this.name ? "node_label_italic" : ""
+            },
+            paletteLabel: function () {
+                return this._("editor.paletteLabel") || "node"
+            },
+            onpaletteadd: function () {},
+            oneditprepare: function () {
+                console.log("node oneditprepare")
+                // Tab
+                const tabs = RED.tabs.create({
+                    id: "red-tabs",
+                    onchange(tab) {
+                        $("#tabs-content").children().hide()
+                        $("#" + tab.id).show()
+                        $("#red-tabs").resize()
+                    },
+                })
+                tabs.addTab({
+                    id: "tab-outParams1-settings",
+                    label: this._("editor.outParams1.tabLabel"),
+                })
+
+                prepareInOutParamSetting(
+                    "outParams1",
+                    {
+                        name: "td",
+                        types: ["msg"],
+                        defaultType: "msg",
+                        defaultValue: "payload",
+                        required: true,
+                    },
+                    this
+                )
+            },
+            oneditsave: function () {
+                saveInOutParamSetting(
+                    "outParams1",
+                    {
+                        name: "td",
+                        types: ["msg"],
+                        defaultType: "msg",
+                        defaultValue: "payload",
+                        required: true,
+                    },
+                    this
+                )
+            },
+        })
+        const prepareInOutParamSetting = (inOrOutParams, params, _this) => {
+            const { name, types, defaultType, defaultValue, required } = params
+            const varName = `${inOrOutParams}_${name}`
+            if (!_this[`${varName}Type`]) {
+                _this[`${varName}Type`] = defaultType
+            }
+            if (this[`${varName}Type`] == "str") {
+                $(`#node-input-${varName}ConstValue`).val("")
+            } else {
+                if (_this[`${varName}ConstValue`] == "") {
+                    $(`#node-input-${varName}ConstValue`).val(_this.credentials[varName])
+                } else {
+                    _this.credentials[varName] = _this[`${varName}ConstValue`]
+                    $(`#node-input-${varName}`).val(_this.credentials[`${varName}`])
+                }
+            }
+            $(`#node-input-${varName}Type`).val(_this[`${varName}Type`])
+            $(`#node-input-${varName}`).typedInput({
+                default: defaultType,
+                typeField: $(`#node-input-${varName}Type`),
+                types: types,
+            })
+            $(`#node-input-${varName}`).typedInput("type", _this[`${varName}Type`])
+        }
+        const saveInOutParamSetting = (inOrOutParams, params, _this) => {
+            const varName = `${inOrOutParams}_${params.name}`
+            if ($(`#node-input-${varName}Type`).val() != "str") {
+                _this[`${varName}ConstValue`] = $(`#node-input-${varName}`).val()
+                $(`#node-input-${varName}ConstValue`).val(_this[`${varName}ConstValue`])
+            } else {
+                $(`#node-input-${varName}ConstValue`).val("")
+                _this[`${varName}ConstValue`] = ""
+            }
+        }
+    })()
+</script>
+
+<script type="text/html" data-template-name="wot-server-td">
+
+    <div class="form-row">
+    	<label for="node-input-name"><span data-i18n="editor.nameLabel"></span></label>
+    	<input type="text" id="node-input-name" data-i18n="[placeholder]editor.nameLabel">
+    </div>
+    <div class='form-row'>
+        <label for='node-input-woTServerConfig' style='font-size: 95%;'><span data-i18n="editor.serverConfigLabel"></label>
+        <input required type='url' id='node-input-woTServerConfig' placeholder='[placeholder]editor.serverConfigLabel'>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-woTThingConfig' style='font-size: 95%;'><span data-i18n="editor.thingConfigLabel"></label>
+        <input required type='url' id='node-input-woTThingConfig' placeholder='[placeholder]editor.thingConfigLabel'>
+    </div>
+    <div class="form-row">
+    	<label for="node-input-outputTDAfterServerStartFlag"><span data-i18n="editor.outputTDAfterServerStartFlagLabel"></span></label>
+    	<input type="checkbox" id="node-input-outputTDAfterServerStartFlag">
+    </div>
+
+    <!-- Tab -->
+    <div class="form-row">
+        <ul style="min-width: 500px; margin-bottom: 20px;" id="red-tabs">
+        </ul>
+    </div>
+    <!-- Tab contents -->
+    <div id="tabs-content" style="min-height:250px;">
+        <div id="tab-outParams1-settings">
+            <div class='form-row'>
+                <label for='node-input-outParams1_td'><span data-i18n="editor.outParams1.td.label"></span></label>
+                <input required type='text' id='node-input-outParams1_td' data-i18n="[placeholder]editor.outParams1.td.placeholder">
+                <input type='hidden' id='node-input-outParams1_tdType'>
+                <input type='hidden' id='node-input-outParams1_tdConstValue'>
+            </div>
+        </div>
+    </div>
+</script>
+
+<style></style>

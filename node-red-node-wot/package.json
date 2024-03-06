@@ -35,7 +35,8 @@
       "wot-server-end": "dist/wot-server-end.js",
       "wot-server-property": "dist/wot-server-property.js",
       "wot-server-action": "dist/wot-server-action.js",
-      "wot-server-event": "dist/wot-server-event.js"
+      "wot-server-event": "dist/wot-server-event.js",
+      "wot-server-td": "dist/wot-server-td.js"
     }
   },
   "scripts": {

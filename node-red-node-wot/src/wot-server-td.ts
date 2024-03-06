@@ -1,25 +1,12 @@
 import ServientManager from "./servients/servient-manager"
 
 module.exports = function (RED) {
-    function WoTServerProperty(config) {
+    function WoTServerTD(config) {
         RED.nodes.createNode(this, config)
         const node = this
-        node.status({ fill: "red", shape: "dot", text: "not prepared" })
-
-        // for wot-server-config
-        node.getProps = () => {
-            return {
-                attrType: "properties",
-                name: config.propertyName,
-                outputAttr: config.outParams2_writingValueConstValue,
-                content: {
-                    description: config.propertyDescription,
-                    type: config.propertyDataType,
-                    readOnly: config.propertyReadOnlyFlag,
-                    observable: config.propertyObservableFlag,
-                },
-            }
-        }
+        this.status({ fill: "red", shape: "dot", text: "not prepared" })
+        console.log("*** wot server td node: ", node)
+        console.log("*** wot server td config: ", config)
 
         node.setServientStatus = (running: boolean) => {
             if (running) {
@@ -29,22 +16,20 @@ module.exports = function (RED) {
             }
         }
 
-        // for wot-server-config
-        node.getThingProps = () => {
-            const woTThingConfig = RED.nodes.getNode(config.woTThingConfig)
-            return woTThingConfig.getProps()
+        node.getOutputTDAfterServerStartFlag = () => {
+            return config.outputTDAfterServerStartFlag
         }
 
         node.on("input", async (msg, send, done) => {
             try {
                 const woTServerConfig = RED.nodes.getNode(config.woTServerConfig)
-
-                await ServientManager.getInstance()
-                    .getThing(woTServerConfig.id, node.getThingProps().title)
-                    .emitPropertyChange(config.propertyName)
-                console.debug("[debug] emitPropertyChange finished. propertyName: ", config.propertyName)
-
-                // No output if changed property value is entered
+                const woTThingConfig = RED.nodes.getNode(config.woTThingConfig)
+                const thing = ServientManager.getInstance().getThing(woTServerConfig.id, woTThingConfig.name)
+                const tdOutputKey = config.outParams1_tdConstValue
+                const td = thing.getThingDescription()
+                msg[tdOutputKey] = td
+                console.debug("[debug] send td. td: ", td)
+                send(msg)
                 done()
             } catch (err) {
                 done(err)
@@ -63,9 +48,9 @@ module.exports = function (RED) {
         const woTServerConfig = RED.nodes.getNode(config.woTServerConfig)
         woTServerConfig?.addUserNode(node)
     }
-    RED.nodes.registerType("wot-server-property", WoTServerProperty, {
+    RED.nodes.registerType("wot-server-td", WoTServerTD, {
         credentials: {
-            outParams2_writingValue: { type: "text" },
+            outParams1_td: { type: "text" },
         },
     })
 

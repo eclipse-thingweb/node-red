@@ -176,17 +176,26 @@ module.exports = function (RED) {
                 // make thing title list
                 const thingNamesObj = {}
                 for (const userNode of userNodes) {
+                    if (userNode.type === "wot-server-td") {
+                        continue
+                    }
                     thingNamesObj[userNode.getThingProps().title] = true
                 }
                 const thingNames = Object.keys(thingNamesObj)
                 // Generate and Expose a Thing for each Thing title
                 for (const thingName of thingNames) {
-                    const targetNodes = userNodes.filter((n) => n.getThingProps().title === thingName)
+                    const targetNodes = userNodes.filter(
+                        (n) => n.type !== "wot-server-td" && n.getThingProps().title === thingName
+                    )
                     const thingProps = targetNodes[0]?.getThingProps() || {}
                     await createWoTScriptAndExpose(thingProps, servientWrapper, targetNodes)
                 }
                 node.running = true
                 userNodes.forEach((n) => {
+                    if (n.type === "wot-server-td" && n.getOutputTDAfterServerStartFlag() === true) {
+                        // send trigger to wot-server-td node for getting TD
+                        n.receive({})
+                    }
                     n.setServientStatus(node.running)
                 })
             } catch (err) {

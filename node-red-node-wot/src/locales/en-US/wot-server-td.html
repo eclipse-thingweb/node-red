@@ -1,0 +1,37 @@
+<script type="text/html" data-help-name="wot-server-td">
+    <p>This is a node that outputs the Thing Description (TD) managed on the WoT server side.</p>
+    <p>The TD is output at the following times:</p>
+    <ul>
+        <li>When the server start is complete.</li>
+        <li>When there is an input to the node.</li>
+    </ul>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>
+            Request for TD
+            <span class="property-type">-</span>
+        </dt>
+        <dd>Request a TD by making an input to the node. There is no need to include a value in the input.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>TD <span class="property-type">Object</span></dt>
+        <dd>Outputs the TD managed by the server.</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>Specify the following items in the node's properties screen:</p>
+    <ul>
+        <li>Name: Specify the node name.</li>
+        <li>Server config: Specify the server that will publish the property.</li>
+        <li>Thing config: Specify the Thing that the property belongs to.</li>
+        <li>TD output after server start: Specify whether to output the TD after the server start.</li>
+        <li>TD destination: Specify where to output the TD.</li>
+    </ul>
+    <p>
+        This node uses <a href="https://github.com/eclipse-thingweb/node-wot">eclipse-thingweb/node-wot</a> for WoT
+        implementation.
+    </p>
+</script>

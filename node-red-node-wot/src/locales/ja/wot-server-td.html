@@ -1,0 +1,37 @@
+<script type="text/html" data-help-name="wot-server-td">
+    <p>WoTのサーバ側で管理するThing Description(TD)を出力するノードです。</p>
+    <p>TDは次のタイミングで出力します。</p>
+    <ul>
+        <li>サーバの起動が完了したタイミング。</li>
+        <li>ノードに対して入力があったタイミング。</li>
+    </ul>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>
+            TDの要求
+            <span class="property-type">-</span>
+        </dt>
+        <dd>ノードに入力を行うことでTDを要求します。入力に値を含める必要はありません。</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>TD <span class="property-type">Object</span></dt>
+        <dd>サーバで管理するTDを出力します。</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>ノードのプロパティ画面では以下の項目を指定します。</p>
+    <ul>
+        <li>名前: ノード名を指定します。</li>
+        <li>サーバ設定: 取得するTDを管理するサーバを指定します。</li>
+        <li>Thing設定: 取得するTDのThingを指定します。</li>
+        <li>サーバ起動後のTD出力: サーバ起動後にTDを出力するかどうかを指定します。</li>
+        <li>TDの出力先: TDの出力先を指定します。</li>
+    </ul>
+    <p>
+        本ノードでは、WoTの実装として<a href="https://github.com/eclipse-thingweb/node-wot">eclipse-thingweb/node-wot</a
+        >を利用します。
+    </p>
+</script>
