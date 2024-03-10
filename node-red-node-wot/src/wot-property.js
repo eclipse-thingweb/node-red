@@ -5,6 +5,7 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         let node = this
         let consumedThing
+        let subscription
 
         this.status({})
 
@@ -20,16 +21,20 @@ module.exports = function (RED) {
             return
         }
 
-        RED.nodes.getNode(config.thing).consumedThing.then(async (thing) => {
-            consumedThing = thing
+        const thingNode = RED.nodes.getNode(config.thing)
+        thingNode.addUpdateTDListener(async (_consumedThing) => {
+            if (subscription) {
+                // Stop if already subscribed
+                await subscription.stop()
+            }
+            consumedThing = _consumedThing
             if (config.observe === false) {
                 return
             }
             // Repeat until observeProperty succeeds.
-            let ob
             while (true) {
                 try {
-                    ob = await consumedThing.observeProperty(
+                    subscription = await consumedThing.observeProperty(
                         config.property,
                         async (resp) => {
                             let payload
@@ -59,7 +64,7 @@ module.exports = function (RED) {
                         text: "Observe error",
                     })
                 }
-                if (ob) {
+                if (subscription) {
                     node.status({
                         fill: "green",
                         shape: "dot",
@@ -113,11 +118,10 @@ module.exports = function (RED) {
                 })
         })
 
-        node.on("close", function (removed, done) {
-            if (removed) {
-                // This node has been deleted
-            } else {
-                // This node is being restarted
+        node.on("close", async function (removed, done) {
+            if (subscription) {
+                // Stop if already subscribed
+                await subscription.stop()
             }
             done()
         })
@@ -127,6 +131,7 @@ module.exports = function (RED) {
     function writePropertyNode(config) {
         RED.nodes.createNode(this, config)
         let node = this
+        let consumedThing
 
         this.status({})
 
@@ -142,32 +147,49 @@ module.exports = function (RED) {
             return
         }
 
-        RED.nodes.getNode(config.thing).consumedThing.then((consumedThing) => {
-            node.on("input", function (msg, send, done) {
-                const uriVariables = config.uriVariables ? JSON.parse(config.uriVariables) : undefined
-                consumedThing
-                    .writeProperty(config.property, msg.payload, {
-                        uriVariables: uriVariables,
+        const thingNode = RED.nodes.getNode(config.thing)
+        thingNode.addUpdateTDListener(async (_consumedThing) => {
+            consumedThing = _consumedThing
+        })
+
+        node.on("input", function (msg, send, done) {
+            if (!consumedThing) {
+                node.error("[error] consumedThing is not defined.")
+                done("consumedThing is not defined.")
+                return
+            }
+            const uriVariables = config.uriVariables ? JSON.parse(config.uriVariables) : undefined
+            consumedThing
+                .writeProperty(config.property, msg.payload, {
+                    uriVariables: uriVariables,
+                })
+                .then((resp) => {
+                    if (resp) node.send({ payload: resp, topic: config.topic })
+                    node.status({
+                        fill: "green",
+                        shape: "dot",
+                        text: "connected",
                     })
-                    .then((resp) => {
-                        if (resp) node.send({ payload: resp, topic: config.topic })
-                        node.status({
-                            fill: "green",
-                            shape: "dot",
-                            text: "connected",
-                        })
-                        done()
+                    done()
+                })
+                .catch((err) => {
+                    node.warn(err)
+                    node.status({
+                        fill: "red",
+                        shape: "ring",
+                        text: err.message,
                     })
-                    .catch((err) => {
-                        node.warn(err)
-                        node.status({
-                            fill: "red",
-                            shape: "ring",
-                            text: err.message,
-                        })
-                        done(err)
-                    })
-            })
+                    done(err)
+                })
+        })
+
+        this.on("close", function (removed, done) {
+            if (removed) {
+                // This node has been deleted
+            } else {
+                // This node is being restarted
+            }
+            done()
         })
     }
     RED.nodes.registerType("write-property", writePropertyNode)

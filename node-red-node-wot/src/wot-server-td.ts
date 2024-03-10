@@ -5,8 +5,6 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         const node = this
         this.status({ fill: "red", shape: "dot", text: "not prepared" })
-        console.log("*** wot server td node: ", node)
-        console.log("*** wot server td config: ", config)
 
         node.setServientStatus = (running: boolean) => {
             if (running) {
