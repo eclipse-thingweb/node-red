@@ -6,6 +6,20 @@ module.exports = function (RED) {
             return {
                 title: config.name,
                 description: config.description,
+                id: config.thingId,
+            }
+        }
+        node.getCredentials = () => {
+            return {
+                username: config.basicAuthUsername,
+                password: config.basicAuthPassword,
+            }
+        }
+        node.getSecurityScheme = () => {
+            if (config.basicAuth) {
+                return "basic"
+            } else {
+                return "nosec"
             }
         }
     }

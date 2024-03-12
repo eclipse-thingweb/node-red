@@ -216,7 +216,7 @@ describe("Tests for Update TD", function () {
                     description: "",
                 },
             })
-            new Promise((resolve) => setTimeout(resolve, 500)).then(() => {
+            new Promise((resolve) => setTimeout(resolve, 1500)).then(() => {
                 expectedEvent = "event from server02"
                 serverEventNode01.receive({ payload: "event from server01" })
                 serverEventNode02.receive({ payload: "event from server02" })

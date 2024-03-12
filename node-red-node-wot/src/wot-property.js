@@ -6,6 +6,7 @@ module.exports = function (RED) {
         let node = this
         let consumedThing
         let subscription
+        let repeatId
 
         this.status({})
 
@@ -23,62 +24,67 @@ module.exports = function (RED) {
 
         const thingNode = RED.nodes.getNode(config.thing)
         thingNode.addUpdateTDListener(async (_consumedThing) => {
+            if (repeatId) {
+                clearInterval(repeatId)
+                repeatId = undefined
+            }
             if (subscription) {
                 // Stop if already subscribed
                 await subscription.stop()
             }
+            subscription = undefined
             consumedThing = _consumedThing
             if (config.observe === false) {
                 return
             }
             // Repeat until observeProperty succeeds.
-            while (true) {
-                try {
-                    subscription = await consumedThing.observeProperty(
-                        config.property,
-                        async (resp) => {
-                            let payload
-                            try {
-                                payload = await resp.value()
-                            } catch (err) {
-                                node.error(`[error] failed to get property change. err: ${err.toString()}`)
-                                console.error(`[error] failed to get property change. err:`, err)
+            await new Promise((resolve, reject) => {
+                repeatId = setInterval(() => {
+                    consumedThing
+                        .observeProperty(
+                            config.property,
+                            async (resp) => {
+                                let payload
+                                try {
+                                    payload = await resp.value()
+                                } catch (err) {
+                                    node.error(`[error] failed to get property change. err: ${err.toString()}`)
+                                    console.error(`[error] failed to get property change. err:`, err)
+                                }
+                                node.send({ payload, topic: config.topic })
+                            },
+                            (err) => {
+                                node.error(`[error] property observe error. error: ${err.toString()}`)
+                                console.error(`[error] property observe error. error: `, err)
+                                node.status({
+                                    fill: "red",
+                                    shape: "ring",
+                                    text: "Observe error",
+                                })
                             }
-                            node.send({ payload, topic: config.topic })
-                        },
-                        (err) => {
-                            node.error(`[error] property observe error. error: ${err.toString()}`)
-                            console.error(`[error] property observe error. error: `, err)
+                        )
+                        .then((sub) => {
+                            subscription = sub
+                            clearInterval(repeatId)
+                            repeatId = undefined
+                            resolve()
+                        })
+                        .catch((err) => {
+                            console.warn("[warn] property observe error. try again. error: " + err)
                             node.status({
                                 fill: "red",
                                 shape: "ring",
                                 text: "Observe error",
                             })
-                        }
-                    )
-                } catch (err) {
-                    console.warn("[warn] property observe error. try again. error: " + err)
-                    node.status({
-                        fill: "red",
-                        shape: "ring",
-                        text: "Observe error",
-                    })
-                }
-                if (subscription) {
-                    node.status({
-                        fill: "green",
-                        shape: "dot",
-                        text: "connected",
-                    })
-                    break
-                }
-                await (() => {
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            resolve()
-                        }, 500)
-                    })
-                })()
+                        })
+                }, 1000)
+            })
+            if (subscription) {
+                node.status({
+                    fill: "green",
+                    shape: "dot",
+                    text: "connected",
+                })
             }
         })
 
@@ -119,6 +125,10 @@ module.exports = function (RED) {
         })
 
         node.on("close", async function (removed, done) {
+            if (repeatId) {
+                clearInterval(repeatId)
+                repeatId = undefined
+            }
             if (subscription) {
                 // Stop if already subscribed
                 await subscription.stop()

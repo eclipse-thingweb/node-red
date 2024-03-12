@@ -15,6 +15,7 @@ module.exports = function (RED) {
         const node = this
         let consumedThing
         let tdListeners = []
+        let servient
 
         this.addUpdateTDListener = (listener) => {
             tdListeners.push(listener)
@@ -24,7 +25,11 @@ module.exports = function (RED) {
         }
 
         this.createConsumedThing = async (td) => {
-            let servient = new Servient()
+            node.td = td //for debug
+            if (servient) {
+                servient.shutdown()
+            }
+            servient = new Servient()
 
             if (config.basicAuth) {
                 servient.addCredentials({

@@ -31,9 +31,8 @@ module.exports = function (RED) {
         }
 
         // for wot-server-config
-        node.getThingProps = () => {
-            const woTThingConfig = RED.nodes.getNode(config.woTThingConfig)
-            return woTThingConfig.getProps()
+        node.getThingNode = () => {
+            return RED.nodes.getNode(config.woTThingConfig)
         }
 
         node.on("close", function (removed, done) {

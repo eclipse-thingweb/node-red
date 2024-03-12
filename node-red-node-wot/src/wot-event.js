@@ -6,6 +6,7 @@ module.exports = function (RED) {
         let node = this
         let consumedThing
         let subscription
+        let repeatId
 
         this.status({})
 
@@ -19,15 +20,20 @@ module.exports = function (RED) {
 
         const thingNode = RED.nodes.getNode(config.thing)
         thingNode.addUpdateTDListener(async (_consumedThing) => {
+            if (repeatId) {
+                clearInterval(repeatId)
+                repeatId = undefined
+            }
             if (subscription) {
                 // Stop if already subscribed
                 await subscription.stop()
             }
+            subscription = undefined
             consumedThing = _consumedThing
             // Repeat until event subscription succeeds.
-            try {
-                while (true) {
-                    subscription = await consumedThing
+            await new Promise((resolve, reject) => {
+                repeatId = setInterval(() => {
+                    consumedThing
                         .subscribeEvent(
                             config.event,
                             async (resp) => {
@@ -63,24 +69,17 @@ module.exports = function (RED) {
                                 subscription = undefined
                             }
                         )
+                        .then((sub) => {
+                            subscription = sub
+                            clearInterval(repeatId)
+                            repeatId = undefined
+                            resolve()
+                        })
                         .catch((err) => {
                             console.warn("[warn] event subscribe error. try again. error: " + err)
                         })
-                    if (subscription) {
-                        break
-                    }
-                    await new Promise((resolve) => {
-                        setTimeout(resolve, 500)
-                    })
-                }
-            } catch (err) {
-                node.status({
-                    fill: "red",
-                    shape: "ring",
-                    text: "Subscription error",
-                })
-                node.error(`[error] failed to subscribe events. error: ${err.toString()}`)
-            }
+                }, 1000)
+            })
 
             if (subscription) {
                 node.status({
@@ -92,6 +91,10 @@ module.exports = function (RED) {
         })
 
         this.on("close", async function (removed, done) {
+            if (repeatId) {
+                clearInterval(repeatId)
+                repeatId = undefined
+            }
             if (subscription) {
                 // Stop if already subscribed
                 await subscription.stop()

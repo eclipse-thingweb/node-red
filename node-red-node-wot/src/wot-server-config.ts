@@ -21,6 +21,16 @@ module.exports = function (RED) {
             }
         }
 
+        function getSecurityDefinition(scheme) {
+            let params
+            if (scheme === "basic") {
+                params = { scheme, in: "header" }
+            } else {
+                params = { scheme }
+            }
+            return params
+        }
+
         async function waitForFinishPrepareRelatedNodes(userNodes: any[], userNodeIds: string[]) {
             const MAX_CHECK_COUNT = 50
             const WAIT_MILLI_SEC = 100 //ms
@@ -118,7 +128,13 @@ module.exports = function (RED) {
         }
 
         async function createWoTScriptAndExpose(
-            thingProps: { title: string; description: string },
+            thingProps: {
+                title: string
+                description: string
+                id?: string
+                securityDefinitions?: any
+                security?: string[]
+            },
             servientWrapper: ServientWrapper,
             userNodes: any[]
         ) {
@@ -156,7 +172,6 @@ module.exports = function (RED) {
         }
 
         async function launchServient() {
-            node.bindingType = node.credentials.bindingType
             if (config.bindingConfigConstValue && config.bindingConfigType) {
                 node.bindingConfig = RED.util.evaluateNodeProperty(
                     config.bindingConfigConstValue,
@@ -168,27 +183,53 @@ module.exports = function (RED) {
             // create thing
             const bindingType = config.bindingType
             const bindingConfig = node.bindingConfig
-            console.debug("[debug] createServient ", node.id, bindingType, bindingConfig)
-            const servientWrapper = servientManager.createServientWrapper(node.id, bindingType, bindingConfig)
             try {
                 await waitForFinishPrepareRelatedNodes(userNodes, config._users)
-                await servientWrapper.startServient()
-                // make thing title list
-                const thingNamesObj = {}
+                // make thing title list and security definitions
+                const securityDefinitions = []
+                const thingTitles = []
                 for (const userNode of userNodes) {
                     if (userNode.type === "wot-server-td") {
                         continue
                     }
-                    thingNamesObj[userNode.getThingProps().title] = true
+                    let thingNode = userNode.getThingNode()
+                    if (!thingNode) {
+                        continue
+                    }
+                    let title = thingNode.getProps()?.title
+                    if (title && !thingTitles.includes(title)) {
+                        thingTitles.push(title)
+                        // make security definitions for server
+                        let secDef = getSecurityDefinition(thingNode.getSecurityScheme())
+                        if (secDef.scheme !== "nosec") {
+                            securityDefinitions.push(secDef)
+                        }
+                    }
                 }
-                const thingNames = Object.keys(thingNamesObj)
+                // merge security params to bindingConfig
+                bindingConfig["security"] = securityDefinitions
+                console.debug("[debug] createServient ", node.id, bindingType, bindingConfig)
+                const servientWrapper = servientManager.createServientWrapper(node.id, bindingType, bindingConfig)
+                await servientWrapper.startServient()
                 // Generate and Expose a Thing for each Thing title
-                for (const thingName of thingNames) {
+                for (const thingTitle of thingTitles) {
                     const targetNodes = userNodes.filter(
-                        (n) => n.type !== "wot-server-td" && n.getThingProps().title === thingName
+                        (n) => n.type !== "wot-server-td" && n.getThingNode().getProps().title === thingTitle
                     )
-                    const thingProps = targetNodes[0]?.getThingProps() || {}
-                    await createWoTScriptAndExpose(thingProps, servientWrapper, targetNodes)
+                    if (targetNodes.length > 0) {
+                        const thingNode = targetNodes[0].getThingNode()
+                        const thingProps = thingNode.getProps() || {}
+                        // add security definition to thingProps
+                        const secScheme = thingNode.getSecurityScheme()
+                        if (secScheme !== "nosec") {
+                            thingProps["securityDefinitions"] = {
+                                sc: getSecurityDefinition(secScheme),
+                            }
+                            thingProps["security"] = ["sc"]
+                        }
+                        await createWoTScriptAndExpose(thingProps, servientWrapper, targetNodes)
+                        servientWrapper.addCredentials(thingProps.title, thingNode.getCredentials())
+                    }
                 }
                 node.running = true
                 userNodes.forEach((n) => {
