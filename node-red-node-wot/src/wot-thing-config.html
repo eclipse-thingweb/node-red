@@ -4,7 +4,11 @@
             category: "config",
             defaults: {
                 name: { value: "", required: true },
-                description: { value: "" },
+                description: { value: "", required: false },
+                thingId: { value: "", required: false },
+                basicAuth: { value:false },
+                basicAuthUsername: { value:"", required:false },
+                basicAuthPassword: { value:"", required:false },
             },
             credentials: {},
             label: function () {
@@ -13,7 +17,19 @@
             labelStyle: function () {
                 return this.name ? "node_label_italic" : ""
             },
-            oneditprepare: function () {},
+            oneditprepare: function () {
+                const $basicAuth = $("#node-config-input-basicAuth")
+                function toggleBasicAuthContainer() {
+                    // Check if event is triggered by user
+                    if ($basicAuth.prop("checked") === true) {
+                        $(".basicAuthContainer").show()
+                    } else {
+                        $(".basicAuthContainer").hide()
+                    }
+                }
+                // Toggle username and password when basic auth is enabled/disabled
+                $basicAuth.change(toggleBasicAuthContainer)
+            },
             oneditsave: function () {},
         })
 
@@ -61,5 +77,22 @@
     <div class="form-row">
         <label for="node-config-input-description"><span data-i18n="editor.descriptionLabel"></span></label>
         <input type="text" id="node-config-input-description" data-i18n="[placeholder]editor.descriptionLabel" />
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-thingId"><span data-i18n="editor.thingIdLabel"></span></label>
+        <input type="text" id="node-config-input-thingId" data-i18n="[placeholder]editor.thingIdLabel" />
+    </div>
+    <p><span data-i18n="editor.securityLabel"></span></p>
+    <div class="form-row">
+        <label for="node-config-input-basicAuth"><span data-i18n="editor.basicAuthLabel"></span></span></label>
+        <span id="basicAuth-tooltip"><input type="checkbox" id="node-config-input-basicAuth"></span>
+    </div>
+    <div class="form-row basicAuthContainer">
+            <label for="node-config-input-basicAuthUsername"><i class="fa fa-user"></i><span data-i18n="editor.usernameLabel"></span></label>
+            <input type="text" id="node-config-input-basicAuthUsername" style="width:60%">
+    </div>
+    <div class="form-row basicAuthContainer">
+        <label for="node-config-input-basicAuthPassword"><i class="fa fa-lock"></i><span data-i18n="editor.passwordLabel"></span></label>
+        <input type="password" id="node-config-input-basicAuthPassword" style="width:60%">
     </div>
 </script>

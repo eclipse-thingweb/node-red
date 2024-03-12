@@ -1,6 +1,11 @@
 {
   "editor": {
     "nameLabel": "Thing title",
-    "descriptionLabel": "Description"
+    "descriptionLabel": "Description",
+    "thingIdLabel": "Thing ID",
+    "securityLabel": "Security:",
+    "basicAuthLabel": "Use basic authentication",
+    "usernameLabel": "Username",
+    "passwordLabel": "Password"
   }
 }
