@@ -47,9 +47,5 @@ module.exports = function (RED) {
         const woTServerConfig = RED.nodes.getNode(config.woTServerConfig)
         woTServerConfig.addUserNode(node)
     }
-    RED.nodes.registerType("wot-server-action", WoTServerAction, {
-        credentials: {
-            outParams1_actionArgs: { type: "text" },
-        },
-    })
+    RED.nodes.registerType("wot-server-action", WoTServerAction)
 }

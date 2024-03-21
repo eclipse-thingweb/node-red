@@ -24,7 +24,5 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("wot-thing-config", WoTThingConfig, {
-        credentials: {},
-    })
+    RED.nodes.registerType("wot-thing-config", WoTThingConfig)
 }

@@ -62,32 +62,5 @@ module.exports = function (RED) {
         const woTServerConfig = RED.nodes.getNode(config.woTServerConfig)
         woTServerConfig?.addUserNode(node)
     }
-    RED.nodes.registerType("wot-server-property", WoTServerProperty, {
-        credentials: {
-            outParams2_writingValue: { type: "text" },
-        },
-    })
-
-    const setOutput = (type, valueName, msg, context, value) => {
-        if (type === "msg") {
-            const names = valueName.split(".")
-            let target = msg
-            for (let i = 0; i < names.length - 1; i++) {
-                let n = names[i]
-                if (target[n] && target[n] instanceof Object) {
-                    target = target[n]
-                } else {
-                    target[n] = {}
-                    target = target[n]
-                }
-            }
-            target[names[names.length - 1]] = value
-        } else if (type === "node") {
-            context.set(valueName, value)
-        } else if (type === "flow") {
-            context.flow.set(valueName, value)
-        } else if (type === "global") {
-            context.global.set(valueName, value)
-        }
-    }
+    RED.nodes.registerType("wot-server-property", WoTServerProperty)
 }

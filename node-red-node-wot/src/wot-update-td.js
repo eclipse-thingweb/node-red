@@ -26,6 +26,7 @@ module.exports = function (RED) {
             if (config.tdSource && config.tdSourceType) {
                 try {
                     td = await RED.util.evaluateNodeProperty(config.tdSource, config.tdSourceType, node, msg)
+                    console.log("*** update td:", td)
                 } catch (err) {
                     return done("cannot evaluate td source")
                 }
