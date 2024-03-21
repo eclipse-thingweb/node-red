@@ -50,7 +50,10 @@
                 $("#node-config-input-bindingType").on("change", () => {
                     const selectedBindingType = $("#node-config-input-bindingType").val()
                     if (selectedBindingType === this.bindingType && this.bindingConfigConstValue !== "{}") {
-                        $("#node-config-input-bindingConfigConstValue").typedInput("value", this.bindingConfigConstValue)
+                        $("#node-config-input-bindingConfigConstValue").typedInput(
+                            "value",
+                            this.bindingConfigConstValue
+                        )
                     } else {
                         $("#node-config-input-bindingConfigConstValue").typedInput(
                             "value",
@@ -58,7 +61,7 @@
                         )
                     }
                 })
-            }
+            },
         })
     })()
 </script>
@@ -73,7 +76,9 @@
         <select id="node-config-input-bindingType"></select>
     </div>
     <div class="form-row">
-        <label for="node-config-input-bindingConfigConstValue"><span data-i18n="editor.bindingConfigLabel"></span></label>
+        <label for="node-config-input-bindingConfigConstValue"
+            ><span data-i18n="editor.bindingConfigLabel"></span
+        ></label>
         <input
             type="text"
             id="node-config-input-bindingConfigConstValue"

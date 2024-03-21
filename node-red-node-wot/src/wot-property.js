@@ -38,7 +38,7 @@ module.exports = function (RED) {
                 return
             }
             // Repeat until observeProperty succeeds.
-            await new Promise((resolve, reject) => {
+            await new Promise((resolve) => {
                 repeatId = setInterval(() => {
                     consumedThing
                         .observeProperty(
