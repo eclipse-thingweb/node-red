@@ -31,7 +31,7 @@ module.exports = function (RED) {
             subscription = undefined
             consumedThing = _consumedThing
             // Repeat until event subscription succeeds.
-            await new Promise((resolve, reject) => {
+            await new Promise((resolve) => {
                 repeatId = setInterval(() => {
                     consumedThing
                         .subscribeEvent(

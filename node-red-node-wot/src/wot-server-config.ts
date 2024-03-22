@@ -72,12 +72,10 @@ module.exports = function (RED) {
                     const finish = (payload) => {
                         resolve(payload)
                     }
-                    userNode.send([
-                        {
-                            _wot: { finish },
-                        },
-                        null,
-                    ])
+                    let msg = {
+                        _wot: { finish },
+                    }
+                    userNode.send([msg, null])
                 })
             })
             if (!props.content.readOnly) {
@@ -100,13 +98,10 @@ module.exports = function (RED) {
                                 resolve()
                             }
                         }
-                        userNode.send([
-                            null,
-                            {
-                                _wot: { finish },
-                                [props.outputAttr]: v,
-                            },
-                        ])
+                        let msg = {}
+                        setOutput("msg", props.outputAttr, msg, node.context(), v)
+                        msg["_wot"] = { finish }
+                        userNode.send([null, msg])
                     })
                 })
             }
@@ -119,10 +114,10 @@ module.exports = function (RED) {
                     const finish = (payload) => {
                         resolve(payload)
                     }
-                    userNode.send({
-                        _wot: { finish },
-                        [props.outputArgs]: args,
-                    })
+                    let msg = {}
+                    setOutput("msg", props.outputArgs, msg, node.context(), args)
+                    msg["_wot"] = { finish }
+                    userNode.send(msg)
                 })
             })
         }
@@ -287,9 +282,28 @@ module.exports = function (RED) {
         })
     }
 
-    RED.nodes.registerType("wot-server-config", WoTServerConfig, {
-        credentials: {
-            bindingConfig: { type: "object" },
-        },
-    })
+    RED.nodes.registerType("wot-server-config", WoTServerConfig)
+
+    const setOutput = (type, valueName, msg, context, value) => {
+        if (type === "msg") {
+            const names = valueName.split(".")
+            let target = msg
+            for (let i = 0; i < names.length - 1; i++) {
+                let n = names[i]
+                if (target[n] && target[n] instanceof Object) {
+                    target = target[n]
+                } else {
+                    target[n] = {}
+                    target = target[n]
+                }
+            }
+            target[names[names.length - 1]] = value
+        } else if (type === "node") {
+            context.set(valueName, value)
+        } else if (type === "flow") {
+            context.flow.set(valueName, value)
+        } else if (type === "global") {
+            context.global.set(valueName, value)
+        }
+    }
 }

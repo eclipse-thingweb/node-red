@@ -7,13 +7,12 @@
                 name: { value: "" },
                 inParams_returnValueType: {
                     value: "msg",
+                    required: true,
                 },
                 inParams_returnValueConstValue: {
                     value: "payload",
+                    required: true,
                 },
-            },
-            credentials: {
-                inParams_returnValue: { type: "text" },
             },
             inputs: 1,
             outputs: 0,
@@ -45,66 +44,14 @@
                     label: this._("editor.inParams.tabLabel"),
                 })
 
-                prepareInOutParamSetting(
-                    "inParams",
-                    {
-                        name: "returnValue",
-                        types: ["msg"],
-                        defaultType: "msg",
-                        defaultValue: "payload",
-                        required: true,
-                    },
-                    this
-                )
-            },
-            oneditsave: function () {
-                saveInOutParamSetting(
-                    "inParams",
-                    {
-                        name: "returnValue",
-                        types: ["msg", "str", "num", "env"],
-                        defaultType: "str",
-                        defaultValue: "payload",
-                        required: true,
-                    },
-                    this
-                )
+                $("#node-input-inParams_returnValueConstValue").typedInput({
+                    defaultType: "msg",
+                    defaultValue: "payload",
+                    types: ["msg"],
+                    typeField: "#node-input-inParams_returnValueType",
+                })
             },
         })
-        const prepareInOutParamSetting = (inOrOutParams, params, _this) => {
-            const { name, types, defaultType, defaultValue, required } = params
-            const varName = `${inOrOutParams}_${name}`
-            if (!_this[`${varName}Type`]) {
-                _this[`${varName}Type`] = defaultType
-            }
-            if (this[`${varName}Type`] == "str") {
-                $(`#node-input-${varName}ConstValue`).val("")
-            } else {
-                if (_this[`${varName}ConstValue`] == "") {
-                    $(`#node-input-${varName}ConstValue`).val(_this.credentials[varName])
-                } else {
-                    _this.credentials[varName] = _this[`${varName}ConstValue`]
-                    $(`#node-input-${varName}`).val(_this.credentials[`${varName}`])
-                }
-            }
-            $(`#node-input-${varName}Type`).val(_this[`${varName}Type`])
-            $(`#node-input-${varName}`).typedInput({
-                default: defaultType,
-                typeField: $(`#node-input-${varName}Type`),
-                types: types,
-            })
-            $(`#node-input-${varName}`).typedInput("type", _this[`${varName}Type`])
-        }
-        const saveInOutParamSetting = (inOrOutParams, params, _this) => {
-            const varName = `${inOrOutParams}_${params.name}`
-            if ($(`#node-input-${varName}Type`).val() != "str") {
-                _this[`${varName}ConstValue`] = $(`#node-input-${varName}`).val()
-                $(`#node-input-${varName}ConstValue`).val(_this[`${varName}ConstValue`])
-            } else {
-                $(`#node-input-${varName}ConstValue`).val("")
-                _this[`${varName}ConstValue`] = ""
-            }
-        }
     })()
 </script>
 
@@ -122,17 +69,15 @@
     <div id="tabs-content" style="min-height:250px;">
         <div id="tab-inParams-settings">
             <div class="form-row">
-                <label for="node-input-inParams_returnValue"
+                <label for="node-input-inParams_returnValueConstValue"
                     ><span data-i18n="editor.inParams.returnValue.label"></span
                 ></label>
                 <input
-                    required
                     type="text"
-                    id="node-input-inParams_returnValue"
+                    id="node-input-inParams_returnValueConstValue"
                     data-i18n="[placeholder]editor.inParams.returnValue.placeholder"
                 />
                 <input type="hidden" id="node-input-inParams_returnValueType" />
-                <input type="hidden" id="node-input-inParams_returnValueConstValue" />
             </div>
         </div>
     </div>

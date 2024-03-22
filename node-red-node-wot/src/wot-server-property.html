@@ -12,9 +12,11 @@
                 propertyObservableFlag: { value: true, required: true },
                 outParams2_writingValueType: {
                     value: "msg",
+                    required: true,
                 },
                 outParams2_writingValueConstValue: {
                     value: "payload",
+                    required: true,
                 },
                 woTServerConfig: {
                     type: "wot-server-config",
@@ -26,9 +28,6 @@
                     value: "",
                     required: true,
                 },
-            },
-            credentials: {
-                outParams2_writingValue: { type: "text" },
             },
             inputs: 1,
             outputs: 2,
@@ -62,66 +61,14 @@
                     label: this._("editor.outParams2.tabLabel"),
                 })
 
-                prepareInOutParamSetting(
-                    "outParams2",
-                    {
-                        name: "writingValue",
-                        types: ["msg"],
-                        defaultType: "msg",
-                        defaultValue: "payload",
-                        required: true,
-                    },
-                    this
-                )
-            },
-            oneditsave: function () {
-                saveInOutParamSetting(
-                    "outParams2",
-                    {
-                        name: "writingValue",
-                        types: ["msg"],
-                        defaultType: "msg",
-                        defaultValue: "payload",
-                        required: true,
-                    },
-                    this
-                )
+                $("#node-input-outParams2_writingValueConstValue").typedInput({
+                    defaultType: "msg",
+                    defaultValue: "payload",
+                    types: ["msg"],
+                    typeField: "#node-input-outParams2_writingValueType",
+                })
             },
         })
-        const prepareInOutParamSetting = (inOrOutParams, params, _this) => {
-            const { name, types, defaultType, defaultValue, required } = params
-            const varName = `${inOrOutParams}_${name}`
-            if (!_this[`${varName}Type`]) {
-                _this[`${varName}Type`] = defaultType
-            }
-            if (this[`${varName}Type`] == "str") {
-                $(`#node-input-${varName}ConstValue`).val("")
-            } else {
-                if (_this[`${varName}ConstValue`] == "") {
-                    $(`#node-input-${varName}ConstValue`).val(_this.credentials[varName])
-                } else {
-                    _this.credentials[varName] = _this[`${varName}ConstValue`]
-                    $(`#node-input-${varName}`).val(_this.credentials[`${varName}`])
-                }
-            }
-            $(`#node-input-${varName}Type`).val(_this[`${varName}Type`])
-            $(`#node-input-${varName}`).typedInput({
-                default: defaultType,
-                typeField: $(`#node-input-${varName}Type`),
-                types: types,
-            })
-            $(`#node-input-${varName}`).typedInput("type", _this[`${varName}Type`])
-        }
-        const saveInOutParamSetting = (inOrOutParams, params, _this) => {
-            const varName = `${inOrOutParams}_${params.name}`
-            if ($(`#node-input-${varName}Type`).val() != "str") {
-                _this[`${varName}ConstValue`] = $(`#node-input-${varName}`).val()
-                $(`#node-input-${varName}ConstValue`).val(_this[`${varName}ConstValue`])
-            } else {
-                $(`#node-input-${varName}ConstValue`).val("")
-                _this[`${varName}ConstValue`] = ""
-            }
-        }
     })()
 </script>
 
@@ -179,10 +126,9 @@
        <div id="tabs-content" style="min-height:250px;">
            <div id="tab-outParams2-settings">
                <div class='form-row'>
-                   <label for='node-input-outParams2_writingValue'><span data-i18n="editor.outParams2.writingValue.label"></span></label>
-                   <input required type='text' id='node-input-outParams2_writingValue' data-i18n="[placeholder]editor.outParams2.writingValue.placeholder">
+                   <label for='node-input-outParams2_writingValueConstValue'><span data-i18n="editor.outParams2.writingValue.label"></span></label>
+                   <input type='text' id='node-input-outParams2_writingValueConstValue' data-i18n="[placeholder]editor.outParams2.writingValue.placeholder">
                    <input type='hidden' id='node-input-outParams2_writingValueType'>
-                   <input type='hidden' id='node-input-outParams2_writingValueConstValue'>
                </div>
            </div>
        </div>
