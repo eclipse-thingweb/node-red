@@ -1,6 +1,6 @@
 {
   "name": "@thingweb/node-red-node-wot",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Web of Things nodes for Node-RED using node-wot",
   "author": "Eclipse Thingweb <thingweb-dev@eclipse.org> (https://thingweb.io/)",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "node-red"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "repository": {
     "type": "git",
