@@ -3,11 +3,14 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         const node = this
         node.getProps = () => {
-            return {
+            let props = {
                 title: config.name,
                 description: config.description,
-                id: config.thingId,
             }
+            if (config.thingId) {
+                props["id"] = config.thingId
+            }
+            return props
         }
         node.getCredentials = () => {
             return {
