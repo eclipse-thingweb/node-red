@@ -1,0 +1,395 @@
+[
+    {
+        "id": "cf78d0f5c734a1c1",
+        "type": "tab",
+        "label": "server-side",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "202e63ba6adc8a34",
+        "type": "comment",
+        "z": "cf78d0f5c734a1c1",
+        "name": "Notification of server-side property changes",
+        "info": "",
+        "x": 250,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "ada66d68fe81a507",
+        "type": "comment",
+        "z": "cf78d0f5c734a1c1",
+        "name": "Processing in response to read requests",
+        "info": "",
+        "x": 840,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "7973116ae4dd5b38",
+        "type": "comment",
+        "z": "cf78d0f5c734a1c1",
+        "name": "Processing in response to write requests",
+        "info": "",
+        "x": 840,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "55dedaa6ded25815",
+        "type": "comment",
+        "z": "cf78d0f5c734a1c1",
+        "name": "Processing in response to a call to action",
+        "info": "",
+        "x": 240,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "1b9b4b89822a4505",
+        "type": "comment",
+        "z": "cf78d0f5c734a1c1",
+        "name": "Notification of events to clients",
+        "info": "",
+        "x": 210,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d953be2f767a1189",
+        "type": "inject",
+        "z": "cf78d0f5c734a1c1",
+        "name": "notify property change",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 200,
+        "y": 140,
+        "wires": [
+            [
+                "e8a4a494e8f5f37f"
+            ]
+        ]
+    },
+    {
+        "id": "e8a4a494e8f5f37f",
+        "type": "wot-server-property",
+        "z": "cf78d0f5c734a1c1",
+        "name": "count property of example-thing",
+        "propertyName": "count",
+        "propertyDescription": "count property of example-thing",
+        "propertyDataType": "integer",
+        "propertyReadOnlyFlag": false,
+        "propertyObservableFlag": true,
+        "outParams2_writingValueType": "msg",
+        "outParams2_writingValueConstValue": "payload",
+        "woTServerConfig": "8ea1eb186841e85e",
+        "woTThingConfig": "1c0a9615452ce161",
+        "x": 490,
+        "y": 140,
+        "wires": [
+            [
+                "3cbfdf6405a53157"
+            ],
+            [
+                "e969b903f974666a"
+            ]
+        ]
+    },
+    {
+        "id": "3cbfdf6405a53157",
+        "type": "function",
+        "z": "cf78d0f5c734a1c1",
+        "name": "property reading process",
+        "func": "let count = global.get(\"example-thing::count\") || 0\nmsg.payload = count\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 100,
+        "wires": [
+            [
+                "8cb23c141bd2b38b"
+            ]
+        ]
+    },
+    {
+        "id": "8cb23c141bd2b38b",
+        "type": "wot-server-end",
+        "z": "cf78d0f5c734a1c1",
+        "name": "return to client with count",
+        "inParams_returnValueType": "msg",
+        "inParams_returnValueConstValue": "payload",
+        "x": 1050,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "e969b903f974666a",
+        "type": "function",
+        "z": "cf78d0f5c734a1c1",
+        "name": "property writing process",
+        "func": "let count = msg.payload\nglobal.set(\"example-thing::count\", count)\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 180,
+        "wires": [
+            [
+                "028f6d05faa89b8b"
+            ]
+        ]
+    },
+    {
+        "id": "028f6d05faa89b8b",
+        "type": "wot-server-end",
+        "z": "cf78d0f5c734a1c1",
+        "name": "return to client",
+        "inParams_returnValueType": "msg",
+        "inParams_returnValueConstValue": "payload",
+        "x": 1020,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e7ad2187d86fc7c4",
+        "type": "catch",
+        "z": "cf78d0f5c734a1c1",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 140,
+        "y": 660,
+        "wires": [
+            [
+                "01e1f11d37e0ea92"
+            ]
+        ]
+    },
+    {
+        "id": "01e1f11d37e0ea92",
+        "type": "debug",
+        "z": "cf78d0f5c734a1c1",
+        "name": "error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 330,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "ff3585318a4155cb",
+        "type": "wot-server-action",
+        "z": "cf78d0f5c734a1c1",
+        "name": "upper-case action of example-thing",
+        "actionName": "upper-case",
+        "actionDescription": "change text upper case",
+        "actionInputDataType": "string",
+        "actionOutputDataType": "string",
+        "outParams1_actionArgsType": "msg",
+        "outParams1_actionArgsConstValue": "payload",
+        "woTServerConfig": "8ea1eb186841e85e",
+        "woTThingConfig": "1c0a9615452ce161",
+        "x": 220,
+        "y": 300,
+        "wires": [
+            [
+                "718f49c507b46038"
+            ]
+        ]
+    },
+    {
+        "id": "718f49c507b46038",
+        "type": "function",
+        "z": "cf78d0f5c734a1c1",
+        "name": "property writing process",
+        "func": "let text = msg.payload\nmsg.payload = text.toUpperCase()\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 300,
+        "wires": [
+            [
+                "e1433e51ad928ef6"
+            ]
+        ]
+    },
+    {
+        "id": "e1433e51ad928ef6",
+        "type": "wot-server-end",
+        "z": "cf78d0f5c734a1c1",
+        "name": "return to client with return value",
+        "inParams_returnValueType": "msg",
+        "inParams_returnValueConstValue": "payload",
+        "x": 810,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "741b5cd6ab2cf4b9",
+        "type": "wot-server-event",
+        "z": "cf78d0f5c734a1c1",
+        "name": "send event to client",
+        "eventName": "exampleEvnet",
+        "eventDescription": "event of example-thing",
+        "eventDataType": "string",
+        "inParams_eventValueType": "msg",
+        "inParams_eventValueConstValue": "payload",
+        "woTServerConfig": "8ea1eb186841e85e",
+        "woTThingConfig": "1c0a9615452ce161",
+        "x": 410,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "6ceccdfd164ad23f",
+        "type": "inject",
+        "z": "cf78d0f5c734a1c1",
+        "name": "event occurrence",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "test-event",
+        "payloadType": "str",
+        "x": 180,
+        "y": 420,
+        "wires": [
+            [
+                "741b5cd6ab2cf4b9"
+            ]
+        ]
+    },
+    {
+        "id": "89227d23772205ee",
+        "type": "comment",
+        "z": "cf78d0f5c734a1c1",
+        "name": "Catching exceptions",
+        "info": "",
+        "x": 170,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "b8f65f663573710d",
+        "type": "comment",
+        "z": "cf78d0f5c734a1c1",
+        "name": "Retrieve generated TD (TD can also be retrieved from the global context)",
+        "info": "",
+        "x": 340,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "f2e4e6998c4dfd70",
+        "type": "wot-server-td",
+        "z": "cf78d0f5c734a1c1",
+        "name": "Retrieve generated TD",
+        "outParams1_tdType": "msg",
+        "outParams1_tdConstValue": "payload",
+        "woTServerConfig": "8ea1eb186841e85e",
+        "woTThingConfig": "1c0a9615452ce161",
+        "outputTDAfterServerStartFlag": true,
+        "x": 440,
+        "y": 540,
+        "wires": [
+            [
+                "582194de977619e5"
+            ]
+        ]
+    },
+    {
+        "id": "2971b78046383811",
+        "type": "inject",
+        "z": "cf78d0f5c734a1c1",
+        "name": "triggers TD retrieving",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 200,
+        "y": 540,
+        "wires": [
+            [
+                "f2e4e6998c4dfd70"
+            ]
+        ]
+    },
+    {
+        "id": "582194de977619e5",
+        "type": "debug",
+        "z": "cf78d0f5c734a1c1",
+        "name": "TD",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "8ea1eb186841e85e",
+        "type": "wot-server-config",
+        "name": "HttpServer",
+        "bindingType": "http",
+        "bindingConfigType": "json",
+        "bindingConfigConstValue": "{\"port\":8080,\"allowSelfSigned\":true}"
+    },
+    {
+        "id": "1c0a9615452ce161",
+        "type": "wot-thing-config",
+        "name": "example-thing",
+        "description": "thing for example",
+        "thingId": "",
+        "basicAuth": false,
+        "basicAuthUsername": "",
+        "basicAuthPassword": ""
+    }
+]

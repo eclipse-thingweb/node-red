@@ -1,0 +1,302 @@
+[
+    {
+        "id": "db77b829167cd9b7",
+        "type": "tab",
+        "label": "client-side",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "61630a3c7b474222",
+        "type": "read-property",
+        "z": "db77b829167cd9b7",
+        "name": "",
+        "topic": "",
+        "thing": "a18841fe05744488",
+        "property": "count",
+        "uriVariables": "{}",
+        "observe": true,
+        "x": 460,
+        "y": 100,
+        "wires": [
+            [
+                "322c0bcf28580284"
+            ]
+        ]
+    },
+    {
+        "id": "79fd49c9fbbeb1e7",
+        "type": "write-property",
+        "z": "db77b829167cd9b7",
+        "name": "",
+        "topic": "",
+        "thing": "a18841fe05744488",
+        "property": "count",
+        "uriVariables": "{}",
+        "x": 460,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "93ec4f561fdf3421",
+        "type": "invoke-action",
+        "z": "db77b829167cd9b7",
+        "name": "",
+        "topic": "",
+        "thing": "a18841fe05744488",
+        "action": "upper-case",
+        "uriVariables": "{}",
+        "x": 470,
+        "y": 340,
+        "wires": [
+            [
+                "fad6462e13d99af4"
+            ]
+        ]
+    },
+    {
+        "id": "fa02f1dbac1161e9",
+        "type": "subscribe-event",
+        "z": "db77b829167cd9b7",
+        "name": "",
+        "topic": "",
+        "thing": "a18841fe05744488",
+        "event": "exampleEvnet",
+        "x": 160,
+        "y": 460,
+        "wires": [
+            [
+                "eac3b3f682579b5b"
+            ]
+        ]
+    },
+    {
+        "id": "3f31b3723b36200a",
+        "type": "update-td",
+        "z": "db77b829167cd9b7",
+        "name": "",
+        "thing": "a18841fe05744488",
+        "tdSourceType": "msg",
+        "tdSource": "payload",
+        "x": 330,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "eac3b3f682579b5b",
+        "type": "debug",
+        "z": "db77b829167cd9b7",
+        "name": "received event",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "dc716499a751f93f",
+        "type": "inject",
+        "z": "db77b829167cd9b7",
+        "name": "new TD",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"@context\":[\"https://www.w3.org/2019/wot/td/v1\",\"https://www.w3.org/2022/wot/td/v1.1\",{\"@language\":\"en\"}],\"@type\":\"Thing\",\"title\":\"example-thing\",\"securityDefinitions\":{\"nosec\":{\"scheme\":\"nosec\"}},\"security\":[\"nosec\"],\"properties\":{\"count\":{\"description\":\"count property of example-thing\",\"type\":\"integer\",\"readOnly\":false,\"observable\":true,\"forms\":[{\"href\":\"http://localhost:8080/example-thing/properties/count\",\"contentType\":\"application/json\",\"op\":[\"readproperty\",\"writeproperty\"]},{\"href\":\"http://localhost:8080/example-thing/properties/count/observable\",\"contentType\":\"application/json\",\"op\":[\"observeproperty\",\"unobserveproperty\"],\"subprotocol\":\"longpoll\"},{\"href\":\"http://localhost:8080/example-thing/properties/count\",\"contentType\":\"application/cbor\",\"op\":[\"readproperty\",\"writeproperty\"]},{\"href\":\"http://localhost:8080/example-thing/properties/count/observable\",\"contentType\":\"application/cbor\",\"op\":[\"observeproperty\",\"unobserveproperty\"],\"subprotocol\":\"longpoll\"}],\"writeOnly\":false}},\"actions\":{\"upper-case\":{\"description\":\"change text upper case\",\"input\":{\"type\":\"string\"},\"output\":{\"type\":\"string\"},\"forms\":[{\"href\":\"http://localhost:8080/example-thing/actions/upper-case\",\"contentType\":\"application/json\",\"op\":[\"i.168nvokeaction\"],\"htv:methodName\":\"POST\"},{\"href\":\"http://localhost:8080/example-thing/actions/upper-case\",\"contentType\":\"application/cbor\",\"op\":[\"invokeaction\"],\"htv:methodName\":\"POST\"}],\"idempotent\":false,\"safe\":false}},\"events\":{\"exampleEvnet\":{\"description\":\"event of example-thing\",\"data\":{\"type\":\"string\"},\"forms\":[{\"href\":\"http://localhost:8080/example-thing/events/exampleEvnet\",\"contentType\":\"application/json\",\"subprotocol\":\"longpoll\",\"op\":[\"subscribeevent\",\"unsubscribeevent\"]},{\"href\":\"http://localhost:8080/example-thing/events/exampleEvnet\",\"contentType\":\"application/cbor\",\"subprotocol\":\"longpoll\",\"op\":[\"subscribeevent\",\"unsubscribeevent\"]}]}},\"id\":\"urn:uuid:8c04b6e3-efa9-40eb-afc3-2b21adf2b2fa\",\"description\":\"thing for example\",\"forms\":[{\"href\":\"http://localhost:8080/example-thing/properties\",\"contentType\":\"application/json\",\"op\":[\"readallproperties\",\"readmultipleproperties\",\"writeallproperties\",\"writemultipleproperties\"]},{\"href\":\"http://localhost:8080/example-thing/properties\",\"contentType\":\"application/cbor\",\"op\":[\"readallproperties\",\"readmultipleproperties\",\"writeallproperties\",\"writemultipleproperties\"]}]}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 600,
+        "wires": [
+            [
+                "3f31b3723b36200a"
+            ]
+        ]
+    },
+    {
+        "id": "b8623621b379b0c1",
+        "type": "inject",
+        "z": "db77b829167cd9b7",
+        "name": "triggers count property retrieving",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 210,
+        "y": 100,
+        "wires": [
+            [
+                "61630a3c7b474222"
+            ]
+        ]
+    },
+    {
+        "id": "322c0bcf28580284",
+        "type": "debug",
+        "z": "db77b829167cd9b7",
+        "name": "value of count property",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "5113a72823dfb569",
+        "type": "inject",
+        "z": "db77b829167cd9b7",
+        "name": "triggers count property writing",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "999",
+        "payloadType": "num",
+        "x": 200,
+        "y": 220,
+        "wires": [
+            [
+                "79fd49c9fbbeb1e7"
+            ]
+        ]
+    },
+    {
+        "id": "50ff215582317f8a",
+        "type": "inject",
+        "z": "db77b829167cd9b7",
+        "name": "triggers action with arguments",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Test Text",
+        "payloadType": "str",
+        "x": 200,
+        "y": 340,
+        "wires": [
+            [
+                "93ec4f561fdf3421"
+            ]
+        ]
+    },
+    {
+        "id": "fad6462e13d99af4",
+        "type": "debug",
+        "z": "db77b829167cd9b7",
+        "name": "received event",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "7f3d6eb93c5502af",
+        "type": "comment",
+        "z": "db77b829167cd9b7",
+        "name": "Get value of count property",
+        "info": "",
+        "x": 180,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "b938daf466a9911a",
+        "type": "comment",
+        "z": "db77b829167cd9b7",
+        "name": "Write count property value",
+        "info": "",
+        "x": 170,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "9117817f4aacfbea",
+        "type": "comment",
+        "z": "db77b829167cd9b7",
+        "name": "Call to action",
+        "info": "",
+        "x": 130,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "7685f7bd971ff8dc",
+        "type": "comment",
+        "z": "db77b829167cd9b7",
+        "name": "Receives events generated by the server",
+        "info": "",
+        "x": 220,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "f354146ea4e9855b",
+        "type": "comment",
+        "z": "db77b829167cd9b7",
+        "name": "Update TD",
+        "info": "",
+        "x": 120,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "a18841fe05744488",
+        "type": "consumed-thing",
+        "tdLink": "",
+        "td": "{\"@context\":[\"https://www.w3.org/2019/wot/td/v1\",\"https://www.w3.org/2022/wot/td/v1.1\",{\"@language\":\"en\"}],\"@type\":\"Thing\",\"title\":\"example-thing\",\"securityDefinitions\":{\"nosec\":{\"scheme\":\"nosec\"}},\"security\":[\"nosec\"],\"properties\":{\"count\":{\"description\":\"count property of example-thing\",\"type\":\"integer\",\"readOnly\":false,\"observable\":true,\"forms\":[{\"href\":\"http://localhost:8080/example-thing/properties/count\",\"contentType\":\"application/json\",\"op\":[\"readproperty\",\"writeproperty\"]},{\"href\":\"http://localhost:8080/example-thing/properties/count/observable\",\"contentType\":\"application/json\",\"op\":[\"observeproperty\",\"unobserveproperty\"],\"subprotocol\":\"longpoll\"},{\"href\":\"http://localhost:8080/example-thing/properties/count\",\"contentType\":\"application/cbor\",\"op\":[\"readproperty\",\"writeproperty\"]},{\"href\":\"http://localhost:8080/example-thing/properties/count/observable\",\"contentType\":\"application/cbor\",\"op\":[\"observeproperty\",\"unobserveproperty\"],\"subprotocol\":\"longpoll\"}],\"writeOnly\":false}},\"actions\":{\"upper-case\":{\"description\":\"change text upper case\",\"input\":{\"type\":\"string\"},\"output\":{\"type\":\"string\"},\"forms\":[{\"href\":\"http://localhost:8080/example-thing/actions/upper-case\",\"contentType\":\"application/json\",\"op\":[\"i.168nvokeaction\"],\"htv:methodName\":\"POST\"},{\"href\":\"http://localhost:8080/example-thing/actions/upper-case\",\"contentType\":\"application/cbor\",\"op\":[\"invokeaction\"],\"htv:methodName\":\"POST\"}],\"idempotent\":false,\"safe\":false}},\"events\":{\"exampleEvnet\":{\"description\":\"event of example-thing\",\"data\":{\"type\":\"string\"},\"forms\":[{\"href\":\"http://localhost:8080/example-thing/events/exampleEvnet\",\"contentType\":\"application/json\",\"subprotocol\":\"longpoll\",\"op\":[\"subscribeevent\",\"unsubscribeevent\"]},{\"href\":\"http://localhost:8080/example-thing/events/exampleEvnet\",\"contentType\":\"application/cbor\",\"subprotocol\":\"longpoll\",\"op\":[\"subscribeevent\",\"unsubscribeevent\"]}]}},\"id\":\"urn:uuid:8c04b6e3-efa9-40eb-afc3-2b21adf2b2fa\",\"description\":\"thing for example\",\"forms\":[{\"href\":\"http://localhost:8080/example-thing/properties\",\"contentType\":\"application/json\",\"op\":[\"readallproperties\",\"readmultipleproperties\",\"writeallproperties\",\"writemultipleproperties\"]},{\"href\":\"http://localhost:8080/example-thing/properties\",\"contentType\":\"application/cbor\",\"op\":[\"readallproperties\",\"readmultipleproperties\",\"writeallproperties\",\"writemultipleproperties\"]}]}",
+        "http": true,
+        "ws": false,
+        "coap": false,
+        "mqtt": false,
+        "opcua": false,
+        "modbus": false,
+        "basicAuth": false,
+        "username": "",
+        "password": ""
+    }
+]
