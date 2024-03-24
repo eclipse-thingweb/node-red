@@ -258,7 +258,7 @@
         "type": "wot-server-event",
         "z": "cf78d0f5c734a1c1",
         "name": "send event to client",
-        "eventName": "exampleEvnet",
+        "eventName": "exampleEvent",
         "eventDescription": "event of example-thing",
         "eventDataType": "string",
         "inParams_eventValueType": "msg",
