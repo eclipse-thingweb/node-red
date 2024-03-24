@@ -12,13 +12,15 @@ After installation, the package adds 8 different nodes at the Node-RED palette, 
 Those nodes are as follows and needed to interact with different interaction affordances of a Thing:
 
 1) Read Property node;
-2) Write Property node;
-3) Invoke Action node;
-4) Subscribe Event node;
-5) Server-End node;
-6) Server-property node;
-7) Server-Action node;
-8) Server-Event node.
+1) Write Property node;
+1) Invoke Action node;
+1) Subscribe Event node;
+1) Update TD node;
+1) Server-End node;
+1) Server-property node;
+1) Server-Action node;
+1) Server-Event node;
+1) Server-TD node.
 
 ![WoT nodes](screenshots/nodes.png)
 
@@ -100,6 +102,8 @@ If you create a new thing config on the properties screen, the following screen 
 
 Specify the Thing title. The Thing title will be included in the Thing Description.
 
+Description and Thing ID are optional; if Thing ID is not specified, Thing ID will be generated automatically.
+
 Server config and Thing config can be shared across multiple Server-Property, Server-Action, and Server-Event nodes. By sharing configs, you can publish one or more properties, actions, and events to the client as a single Thing.
 
 In addition to server config and Thing config, there are necessary settings for each Server-Property, Server-Action, and Server-Event node. For the settings of each node, refer to the node help. Help can be viewed on the Node-RED editor's Help tab.
@@ -116,6 +120,14 @@ If you want to check the Thing Description, open the Context Data tab of the Nod
 
 ![Reference TD](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/reference-td.png)
 
+The Thing Description can also be obtained using the Server-TD node.
+
+Also, the client can use the Update TD node to replace the Thing Description. For example, if the server URL is changed, the destination server can be changed without restarting the flow.
+
+You can get the Example from the Import menu of the Node-RED editor for reference.
+
+![Import Example Flows](screenshots/import-example-flows.png)
+
 Currently, the supported binding types are HTTP, CoAP, and MQTT. As shown in the table below, each of these types of bindings has its own available/unavailable functions. Available functions are denoted by `✓` and unavailable functions are denoted by `-`.
 
 | |http|coap|mqtt|
@@ -129,3 +141,5 @@ Currently, the supported binding types are HTTP, CoAP, and MQTT. As shown in the
 *1: After the connection with the server times out after 1 hour, it is not reconnected
 
 Also, it is unclear how to define the flow when the data type is null.
+
+

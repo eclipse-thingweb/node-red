@@ -5,6 +5,8 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         let node = this
         let consumedThing
+        let subscription
+        let repeatId
 
         this.status({})
 
@@ -20,60 +22,69 @@ module.exports = function (RED) {
             return
         }
 
-        RED.nodes.getNode(config.thing).consumedThing.then(async (thing) => {
-            consumedThing = thing
+        const thingNode = RED.nodes.getNode(config.thing)
+        thingNode.addUpdateTDListener(async (_consumedThing) => {
+            if (repeatId) {
+                clearInterval(repeatId)
+                repeatId = undefined
+            }
+            if (subscription) {
+                // Stop if already subscribed
+                await subscription.stop()
+            }
+            subscription = undefined
+            consumedThing = _consumedThing
             if (config.observe === false) {
                 return
             }
             // Repeat until observeProperty succeeds.
-            let ob
-            while (true) {
-                try {
-                    ob = await consumedThing.observeProperty(
-                        config.property,
-                        async (resp) => {
-                            let payload
-                            try {
-                                payload = await resp.value()
-                            } catch (err) {
-                                node.error(`[error] failed to get property change. err: ${err.toString()}`)
-                                console.error(`[error] failed to get property change. err:`, err)
+            await new Promise((resolve) => {
+                repeatId = setInterval(() => {
+                    consumedThing
+                        .observeProperty(
+                            config.property,
+                            async (resp) => {
+                                let payload
+                                try {
+                                    payload = await resp.value()
+                                } catch (err) {
+                                    node.error(`[error] failed to get property change. err: ${err.toString()}`)
+                                    console.error(`[error] failed to get property change. err:`, err)
+                                }
+                                node.send({ payload, topic: config.topic })
+                            },
+                            (err) => {
+                                node.error(`[error] property observe error. error: ${err.toString()}`)
+                                console.error(`[error] property observe error. error: `, err)
+                                node.status({
+                                    fill: "red",
+                                    shape: "ring",
+                                    text: "Observe error",
+                                })
                             }
-                            node.send({ payload, topic: config.topic })
-                        },
-                        (err) => {
-                            node.error(`[error] property observe error. error: ${err.toString()}`)
-                            console.error(`[error] property observe error. error: `, err)
+                        )
+                        .then((sub) => {
+                            subscription = sub
+                            clearInterval(repeatId)
+                            repeatId = undefined
+                            resolve()
+                        })
+                        .catch((err) => {
+                            console.warn("[warn] property observe error. try again. error: " + err)
                             node.status({
                                 fill: "red",
                                 shape: "ring",
                                 text: "Observe error",
                             })
-                        }
-                    )
-                } catch (err) {
-                    console.warn("[warn] property observe error. try again. error: " + err)
-                    node.status({
-                        fill: "red",
-                        shape: "ring",
-                        text: "Observe error",
-                    })
-                }
-                if (ob) {
-                    node.status({
-                        fill: "green",
-                        shape: "dot",
-                        text: "connected",
-                    })
-                    break
-                }
-                await (() => {
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            resolve()
-                        }, 500)
-                    })
-                })()
+                        })
+                }, 1000)
+            })
+            if (subscription) {
+                node.status({
+                    fill: "green",
+                    shape: "dot",
+                    text: "connected",
+                })
             }
         })
 
@@ -113,11 +124,14 @@ module.exports = function (RED) {
                 })
         })
 
-        node.on("close", function (removed, done) {
-            if (removed) {
-                // This node has been deleted
-            } else {
-                // This node is being restarted
+        node.on("close", async function (removed, done) {
+            if (repeatId) {
+                clearInterval(repeatId)
+                repeatId = undefined
+            }
+            if (subscription) {
+                // Stop if already subscribed
+                await subscription.stop()
             }
             done()
         })
@@ -127,6 +141,7 @@ module.exports = function (RED) {
     function writePropertyNode(config) {
         RED.nodes.createNode(this, config)
         let node = this
+        let consumedThing
 
         this.status({})
 
@@ -142,32 +157,49 @@ module.exports = function (RED) {
             return
         }
 
-        RED.nodes.getNode(config.thing).consumedThing.then((consumedThing) => {
-            node.on("input", function (msg, send, done) {
-                const uriVariables = config.uriVariables ? JSON.parse(config.uriVariables) : undefined
-                consumedThing
-                    .writeProperty(config.property, msg.payload, {
-                        uriVariables: uriVariables,
+        const thingNode = RED.nodes.getNode(config.thing)
+        thingNode.addUpdateTDListener(async (_consumedThing) => {
+            consumedThing = _consumedThing
+        })
+
+        node.on("input", function (msg, send, done) {
+            if (!consumedThing) {
+                node.error("[error] consumedThing is not defined.")
+                done("consumedThing is not defined.")
+                return
+            }
+            const uriVariables = config.uriVariables ? JSON.parse(config.uriVariables) : undefined
+            consumedThing
+                .writeProperty(config.property, msg.payload, {
+                    uriVariables: uriVariables,
+                })
+                .then((resp) => {
+                    if (resp) node.send({ payload: resp, topic: config.topic })
+                    node.status({
+                        fill: "green",
+                        shape: "dot",
+                        text: "connected",
                     })
-                    .then((resp) => {
-                        if (resp) node.send({ payload: resp, topic: config.topic })
-                        node.status({
-                            fill: "green",
-                            shape: "dot",
-                            text: "connected",
-                        })
-                        done()
+                    done()
+                })
+                .catch((err) => {
+                    node.warn(err)
+                    node.status({
+                        fill: "red",
+                        shape: "ring",
+                        text: err.message,
                     })
-                    .catch((err) => {
-                        node.warn(err)
-                        node.status({
-                            fill: "red",
-                            shape: "ring",
-                            text: err.message,
-                        })
-                        done(err)
-                    })
-            })
+                    done(err)
+                })
+        })
+
+        this.on("close", function (removed, done) {
+            if (removed) {
+                // This node has been deleted
+            } else {
+                // This node is being restarted
+            }
+            done()
         })
     }
     RED.nodes.registerType("write-property", writePropertyNode)

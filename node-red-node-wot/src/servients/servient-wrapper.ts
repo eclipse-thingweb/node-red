@@ -51,6 +51,12 @@ export default class ServientWrapper {
         return this.things[thingName]
     }
 
+    public addCredentials(title, credentials) {
+        const thing = this.things[title]
+        const td = thing.getThingDescription()
+        this.servient.addCredentials({ [td.id]: credentials })
+    }
+
     public async endServient() {
         if (this.server) {
             console.debug("[debug] endServient called.")

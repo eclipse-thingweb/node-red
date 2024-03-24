@@ -31,9 +31,8 @@ module.exports = function (RED) {
         }
 
         // for wot-server-config
-        node.getThingProps = () => {
-            const woTThingConfig = RED.nodes.getNode(config.woTThingConfig)
-            return woTThingConfig.getProps()
+        node.getThingNode = () => {
+            return RED.nodes.getNode(config.woTThingConfig)
         }
 
         node.on("close", function (removed, done) {
@@ -45,12 +44,8 @@ module.exports = function (RED) {
             done()
         })
 
-        const woTServerConfig = RED.nodes.getNode(config.woTServerConfig) //test
+        const woTServerConfig = RED.nodes.getNode(config.woTServerConfig)
         woTServerConfig.addUserNode(node)
     }
-    RED.nodes.registerType("wot-server-action", WoTServerAction, {
-        credentials: {
-            inParams_actionName: { type: "text" },
-        },
-    })
+    RED.nodes.registerType("wot-server-action", WoTServerAction)
 }

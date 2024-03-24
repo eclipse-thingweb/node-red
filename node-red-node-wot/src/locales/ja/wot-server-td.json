@@ -1,0 +1,18 @@
+{
+  "editor": {
+    "paletteLabel": "Server-TD",
+    "nameLabel": "名前",
+    "serverConfigLabel": "サーバ設定",
+    "thingConfigLabel": "Thing設定",
+    "outputTDAfterServerStartFlagLabel": "サーバ起動後のTD出力",
+    "outParams1": {
+      "tabLabel": "TD出力",
+      "outputLabel": "TD",
+      "td": {
+        "label": "TDの出力先",
+        "description": "取得したTDの出力先。",
+        "placeholder": "取得したTDの出力先"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "editor": {
+    "paletteLabel": "Server-TD",
+    "nameLabel": "Name",
+    "serverConfigLabel": "Server config",
+    "thingConfigLabel": "Thing config",
+    "outputTDAfterServerStartFlagLabel": "TD output after server start",
+    "outParams1": {
+      "tabLabel": "Output TD",
+      "outputLabel": "TD",
+      "td": {
+        "label": "TD destination",
+        "description": "TD destination.",
+        "placeholder": "TD destination"
+      }
+    }
+  }
+}

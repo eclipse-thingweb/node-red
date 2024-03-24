@@ -4,6 +4,9 @@ module.exports = function (RED) {
     function invokeActionNode(config) {
         RED.nodes.createNode(this, config)
         let node = this
+        let consumedThing
+
+        this.status({})
 
         if (!config.thing) {
             this.status({ fill: "red", shape: "dot", text: "Error: Thing undefined" })
@@ -17,15 +20,26 @@ module.exports = function (RED) {
             return
         }
 
+        const thingNode = RED.nodes.getNode(config.thing)
+        thingNode.addUpdateTDListener(async (_consumedThing) => {
+            consumedThing = _consumedThing
+        })
+
         this.on("input", function (msg, send, done) {
-            RED.nodes.getNode(config.thing).consumedThing.then((consumedThing) => {
-                const uriVariables = config.uriVariables ? JSON.parse(config.uriVariables) : undefined
-                consumedThing
-                    .invokeAction(config.action, msg.payload, {
-                        uriVariables: uriVariables,
-                    })
-                    .then(async (resp) => {
-                        const payload = resp ? await resp.value() : ""
+            if (!consumedThing) {
+                node.error("[error] consumedThing is not defined.")
+                done("consumedThing is not defined.")
+                return
+            }
+            const uriVariables = config.uriVariables ? JSON.parse(config.uriVariables) : undefined
+            consumedThing
+                .invokeAction(config.action, msg.payload, {
+                    uriVariables: uriVariables,
+                })
+                .then(async (resp) => {
+                    let payload
+                    try {
+                        payload = await resp.value()
                         node.send({ payload: payload, topic: config.topic })
                         node.status({
                             fill: "green",
@@ -33,17 +47,20 @@ module.exports = function (RED) {
                             text: "invoked",
                         })
                         done()
+                    } catch (err) {
+                        console.error(`[error] failed to get return value. err: `, err)
+                        done(`[error] failed to get return value. err: ${err.toString()}`)
+                    }
+                })
+                .catch((err) => {
+                    node.warn(err)
+                    node.status({
+                        fill: "red",
+                        shape: "ring",
+                        text: err.message,
                     })
-                    .catch((err) => {
-                        node.warn(err)
-                        node.status({
-                            fill: "red",
-                            shape: "ring",
-                            text: err.message,
-                        })
-                        done(err)
-                    })
-            })
+                    done(err)
+                })
         })
 
         this.on("close", function (removed, done) {

@@ -13,16 +13,27 @@ module.exports = function (RED) {
     function consumedThingNode(config) {
         RED.nodes.createNode(this, config)
         const node = this
+        let consumedThing
+        let tdListeners = []
+        let servient
 
-        this.tdLink = config.tdLink
-        this.td = JSON.parse(config.td)
+        this.addUpdateTDListener = (listener) => {
+            tdListeners.push(listener)
+            if (consumedThing) {
+                listener(consumedThing)
+            }
+        }
 
-        this.consumedThing = new Promise((resolve, reject) => {
-            let servient = new Servient()
+        this.createConsumedThing = async (td) => {
+            node.td = td //for debug
+            if (servient) {
+                servient.shutdown()
+            }
+            servient = new Servient()
 
             if (config.basicAuth) {
                 servient.addCredentials({
-                    [this.td.id]: { username: config.username.trim(), password: config.password },
+                    [td.id]: { username: config.username.trim(), password: config.password },
                 })
             }
 
@@ -47,16 +58,21 @@ module.exports = function (RED) {
                 servient.addClientFactory(new ModbusClientFactory())
             }
 
-            servient
-                .start()
-                .then((thingFactory) => {
-                    let consumedThing = thingFactory.consume(this.td)
-                    resolve(consumedThing)
-                })
-                .catch((err) => {
-                    node.error(`[error] failed to start servient. err: ${err.toString()}`)
-                    reject(err)
-                })
+            const thingFactory = await servient.start()
+            consumedThing = await thingFactory.consume(td)
+            tdListeners.forEach((listener) => {
+                listener(consumedThing)
+            })
+        }
+
+        const td = JSON.parse(config.td)
+        this.createConsumedThing(td).catch((err) => {
+            node.error(`[error] failed to start servient. err: ${err.toString()}`)
+        })
+
+        this.on("close", function (removed, done) {
+            tdListeners = []
+            done()
         })
     }
     RED.nodes.registerType("consumed-thing", consumedThingNode)

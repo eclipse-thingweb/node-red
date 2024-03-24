@@ -1,6 +1,11 @@
 {
   "editor": {
     "nameLabel": "Thing名",
-    "descriptionLabel": "説明"
+    "descriptionLabel": "説明",
+    "thingIdLabel": "Thing ID",
+    "securityLabel": "セキュリティ:",
+    "basicAuthLabel": "Basic認証利用",
+    "usernameLabel": "ユーザー名",
+    "passwordLabel": "パスワード"
   }
 }

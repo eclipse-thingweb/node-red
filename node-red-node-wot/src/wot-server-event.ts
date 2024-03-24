@@ -28,16 +28,14 @@ module.exports = function (RED) {
         }
 
         // for wot-server-config
-        node.getThingProps = () => {
-            const woTThingConfig = RED.nodes.getNode(config.woTThingConfig)
-            return woTThingConfig.getProps()
+        node.getThingNode = () => {
+            return RED.nodes.getNode(config.woTThingConfig)
         }
 
         node.on("input", async (msg, send, done) => {
             try {
                 const woTServerConfig = RED.nodes.getNode(config.woTServerConfig)
 
-                node.inParams_eventValue = node.credentials.inParams_eventValue
                 if (config.inParams_eventValueConstValue && config.inParams_eventValueType) {
                     node.inParams_eventValue = RED.util.evaluateNodeProperty(
                         config.inParams_eventValueConstValue,
@@ -47,7 +45,7 @@ module.exports = function (RED) {
                     )
                 }
                 await ServientManager.getInstance()
-                    .getThing(woTServerConfig.id, node.getThingProps().title)
+                    .getThing(woTServerConfig.id, node.getThingNode().getProps().title)
                     .emitEvent(config.eventName, node.inParams_eventValue)
                 console.debug("[debug] emitEvent finished. eventName: ", config.eventName)
 
@@ -67,35 +65,8 @@ module.exports = function (RED) {
             done()
         })
 
-        const woTServerConfig = RED.nodes.getNode(config.woTServerConfig) //test
+        const woTServerConfig = RED.nodes.getNode(config.woTServerConfig)
         woTServerConfig?.addUserNode(node)
     }
-    RED.nodes.registerType("wot-server-event", WoTServerEvent, {
-        credentials: {
-            inParams_propertyName: { type: "text" },
-        },
-    })
-
-    const setOutput = (type, valueName, msg, context, value) => {
-        if (type === "msg") {
-            const names = valueName.split(".")
-            let target = msg
-            for (let i = 0; i < names.length - 1; i++) {
-                let n = names[i]
-                if (target[n] && target[n] instanceof Object) {
-                    target = target[n]
-                } else {
-                    target[n] = {}
-                    target = target[n]
-                }
-            }
-            target[names[names.length - 1]] = value
-        } else if (type === "node") {
-            context.set(valueName, value)
-        } else if (type === "flow") {
-            context.flow.set(valueName, value)
-        } else if (type === "global") {
-            context.global.set(valueName, value)
-        }
-    }
+    RED.nodes.registerType("wot-server-event", WoTServerEvent)
 }

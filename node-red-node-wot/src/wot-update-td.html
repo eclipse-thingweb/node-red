@@ -1,0 +1,58 @@
+<script type="text/javascript">
+    RED.nodes.registerType("update-td", {
+        category: "Web of Things",
+        color: "#5fa2a2",
+        defaults: {
+            name: { value: "" },
+            thing: { value: "", type: "consumed-thing", required: true },
+            tdSourceType: { value: "msg", required: true },
+            tdSource: { value: "payload", required: true },
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "arrow-in.png",
+        paletteLabel: "Update TD",
+        align: "right",
+        label: function () {
+            if (this.name) {
+                return this.name
+            } else {
+                return "update-TD"
+            }
+        },
+        oneditprepare: function () {
+            let node = this
+
+            $("#node-input-tdSource").typedInput({
+                defaultType: "msg",
+                defaultValue: "payload",
+                types: ["msg", "json", "str"],
+                typeField: "#node-input-tdSourceType",
+            })
+
+            // Should be hidden only after typedInput is created
+            // Otherwise the json input field for uriVariables is not drawn properly
+            //$("div#action-row").hide()
+        },
+    })
+</script>
+
+<script type="text/x-red" data-template-name="update-td">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-thing"><i class="fa fa-gears"></i> Thing</label>
+        <input type="text" id="node-input-thing" placeholder="Thing">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tdSource"><i class="icon-tag"></i> TD source</label>
+        <input type="text" id="node-input-tdSource">
+        <input type="hidden" id="node-input-tdSourceType">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="update-td">
+    <p>A node that updates a Thing Description.</p>
+</script>
