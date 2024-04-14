@@ -1,0 +1,59 @@
+<script type="module" src="/resources/@thingweb/node-red-node-wot/node-wot-plugin-lib.js" ></script>
+<script type="module">
+    import {createClientFlowUsingDashboard} from "/resources/@thingweb/node-red-node-wot/node-wot-plugin-lib.js"
+    RED.plugins.registerPlugin("create-wot-client-flow", {
+        type: "create-client-flow",
+        onadd: function() {
+          RED.actions.add("create-wot-client-flow:selected", function() {
+            console.log("***** create-wot-client-flow:selected")
+            const tdInputNotification = RED.notify(`
+                <div>
+                <div class="form-row">
+                    <label for="td-string">Please paste a Thing description.</label>
+                    <textarea id="td-string" placeholder="thing description" style="width:100%;"></textarea>
+                </div>
+                <div class="form-row">
+                    <span id="error-display-area" style="color:red"></span>
+                </div>
+                <div>`,
+                {
+                    modal: true,
+                    fixed: true,
+                    type: 'success',
+                    buttons: [
+                        {
+                            text: "Cancel",
+                            click: function(e) {
+                                const existedNodes = RED.nodes.createCompleteNodeSet({ credentials: false })
+                                console.log("*** existedNodes", existedNodes)
+                                tdInputNotification.close();
+                            }
+                        },
+                        {
+                            text: "OK",
+                            class:"primary",
+                            click: function(e) {
+                                try {
+                                    const tdString = $("#td-string").val()
+                                    const existedNodes = RED.nodes.createCompleteNodeSet({ credentials: false })
+                                    createClientFlowUsingDashboard(tdString, existedNodes)
+                                    console.log("*************** OK")
+                                    tdInputNotification.close();
+                                } catch(err) {
+                                    $("#error-display-area").text(err.toString())
+                                    console.error("error: ", err)
+                                }
+                            }
+                        }
+                    ]
+                });
+            });
+            RED.menu.addItem("red-ui-header-button-sidemenu", {
+                id: "menu-item-create-wot-client-flow",
+                label: "create wot client flow from wot td",
+                onselect: "create-wot-client-flow:selected"
+            });
+        }
+    });
+ </script>
+ 

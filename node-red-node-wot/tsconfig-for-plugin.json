@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "module": "es6",
+    "outDir": "./resources",
+    "rootDir": "plugin-resources-src",
+  },
+  "include": ["plugin-resources-src/**/*"]
+}

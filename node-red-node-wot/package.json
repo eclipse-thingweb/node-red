@@ -1,6 +1,6 @@
 {
   "name": "@thingweb/node-red-node-wot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Web of Things nodes for Node-RED using node-wot",
   "author": "Eclipse Thingweb <thingweb-dev@eclipse.org> (https://thingweb.io/)",
   "license": "MIT",
@@ -34,11 +34,16 @@
       "wot-server-event": "dist/wot-server-event.js",
       "wot-server-td": "dist/wot-server-td.js"
     },
+    "plugins": {
+      "node-wot-plugin": "plugin/node-wot-plugin.html"
+    },
     "version": ">=1.3.7"
   },
   "scripts": {
-    "build": "npm run copy:src2dist && tsc",
+    "build": "npm run copy:src2dist && tsc && npm run build:plugin",
     "copy:src2dist": "node -e \"require('fs-extra').copySync('./src', './dist')\"",
+    "build:plugin": "npm run copy:plugin-resources-src2resources && tsc --project ./tsconfig-for-plugin.json",
+    "copy:plugin-resources-src2resources": "node -e \"require('fs-extra').copySync('./plugin-resources-src', './resources')\"",
     "publish": "npm publish --access=public",
     "publish:beta": "npm publish --access=public --tag=beta",
     "test": "mocha --require ts-node/register --extension ts --exit"
