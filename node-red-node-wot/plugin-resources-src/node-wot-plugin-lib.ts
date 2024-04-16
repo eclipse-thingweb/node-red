@@ -42,7 +42,6 @@ const Y_GAP = 50
 const UIBASE_ID_INDEX = 3
 
 export const createClientFlowUsingDashboard = (tdString: string, existedNodes: any) => {
-    console.log("*** createClientFlowUsingDashboard", tdString, existedNodes)
     let existedUiBaseId
     for (let node of existedNodes) {
         if (node.type === "ui-base" && node.name === "things-dashboard") {
@@ -185,7 +184,6 @@ const replaceParamsAndIds = (
         flowStr = replaceAll(flowStr, `<%y${y}%>`, offsetY)
         offsetY += Y_GAP
     }
-    console.log("*** flowStr", flowStr)
     let flow = JSON.parse(flowStr)
     return { flow, offsetY }
 }
@@ -520,7 +518,7 @@ const PROPERTY_READ_TEMP = `[
         "property": "<%propertyName%>",
         "uriVariables": "{}",
         "observe": true,
-        "x": 380,
+        "x": 480,
         "y": <%y0%>,
         "wires": [
             [
@@ -541,7 +539,7 @@ const PROPERTY_READ_TEMP = `[
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 580,
+        "x": 780,
         "y": <%y0%>,
         "wires": [
             [
@@ -566,7 +564,7 @@ const PROPERTY_READ_TEMP = `[
         "fontSize": 16,
         "color": "#717171",
         "className": "",
-        "x": 780,
+        "x": 1080,
         "y": <%y0%>,
         "wires": []
     }
@@ -611,7 +609,7 @@ const PROPERTY_READ_CHART_TEMP = `[
         "width": 12,
         "height": 6,
         "className": "",
-        "x": 580,
+        "x": 780,
         "y": <%y0%>,
         "wires": [
             []
@@ -659,7 +657,7 @@ const PROPERTY_WRITE_TEMP = `[
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
+        "x": 480,
         "y": <%y0%>,
         "wires": [
             [
@@ -676,7 +674,7 @@ const PROPERTY_WRITE_TEMP = `[
         "thing": "<%common-genid(1)%>",
         "property": "<%propertyName%>",
         "uriVariables": "{}",
-        "x": 580,
+        "x": 780,
         "y": <%y0%>,
         "wires": []
     }
@@ -766,7 +764,7 @@ const ACTION_TEMP = `[
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
+        "x": 480,
         "y": <%y2%>,
         "wires": [
             [
@@ -783,7 +781,7 @@ const ACTION_TEMP = `[
         "thing": "<%common-genid(1)%>",
         "action": "<%actionName%>",
         "uriVariables": "{}",
-        "x": 580,
+        "x": 780,
         "y": <%y2%>,
         "wires": [
             [
@@ -803,7 +801,7 @@ const ACTION_TEMP = `[
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
+        "x": 1080,
         "y": <%y2%>,
         "wires": [
             [
@@ -828,7 +826,7 @@ const ACTION_TEMP = `[
         "fontSize": 16,
         "color": "#717171",
         "className": "",
-        "x": 980,
+        "x": 1380,
         "y": <%y2%>,
         "wires": []
     }
@@ -908,7 +906,7 @@ const EVENT_TEMP = `[
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
+        "x": 480,
         "y": <%y2%>,
         "wires": [
             [
@@ -929,7 +927,7 @@ const EVENT_TEMP = `[
         "maxrows": "10",
         "autocols": true,
         "columns": [],
-        "x": 580,
+        "x": 780,
         "y": <%y2%>,
         "wires": []
     },
@@ -949,7 +947,7 @@ const EVENT_TEMP = `[
         "raw": false,
         "className": "",
         "name": "",
-        "x": 380,
+        "x": 480,
         "y": <%y3%>,
         "wires": []
     }

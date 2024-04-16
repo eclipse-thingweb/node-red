@@ -4,18 +4,15 @@
     RED.plugins.registerPlugin("create-wot-client-flow", {
         type: "create-client-flow",
         onadd: function() {
+         const plugin = this
           RED.actions.add("create-wot-client-flow:selected", function() {
-            console.log("***** create-wot-client-flow:selected")
             const tdInputNotification = RED.notify(`
                 <div>
                 <div class="form-row">
-                    <label for="td-string">Please paste a Thing description.</label>
-                    <textarea id="td-string" placeholder="thing description" style="width:100%;"></textarea>
+                    <div>Please paste a Thing Description.</div>
+                    <textarea id="td-string" placeholder="Thing Description" style="width:100%;" rows="8"></textarea>
                 </div>
-                <div class="form-row">
-                    <span id="error-display-area" style="color:red"></span>
-                </div>
-                <div>`,
+                </div>`,
                 {
                     modal: true,
                     fixed: true,
@@ -25,7 +22,6 @@
                             text: "Cancel",
                             click: function(e) {
                                 const existedNodes = RED.nodes.createCompleteNodeSet({ credentials: false })
-                                console.log("*** existedNodes", existedNodes)
                                 tdInputNotification.close();
                             }
                         },
@@ -37,10 +33,9 @@
                                     const tdString = $("#td-string").val()
                                     const existedNodes = RED.nodes.createCompleteNodeSet({ credentials: false })
                                     createClientFlowUsingDashboard(tdString, existedNodes)
-                                    console.log("*************** OK")
                                     tdInputNotification.close();
                                 } catch(err) {
-                                    $("#error-display-area").text(err.toString())
+                                    RED.notify(err.toString(), {type:"error", timeout:5000, modal:true})
                                     console.error("error: ", err)
                                 }
                             }
@@ -50,7 +45,7 @@
             });
             RED.menu.addItem("red-ui-header-button-sidemenu", {
                 id: "menu-item-create-wot-client-flow",
-                label: "create wot client flow from wot td",
+                label: "Create WoT client flow",
                 onselect: "create-wot-client-flow:selected"
             });
         }

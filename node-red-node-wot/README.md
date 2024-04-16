@@ -142,4 +142,25 @@ Currently, the supported binding types are HTTP, CoAP, and MQTT. As shown in the
 
 Also, it is unclear how to define the flow when the data type is null.
 
+## Create WoT Client Flow Automaticaly
 
+Provides the ability to automatically create client flows for WoT that can be used from a web browser.
+
+Please install the `@flowfuse/node-red-dashboard` node beforehand.
+Nodes are installed by clicking on the menu icon in the upper right corner and then clicking on Manage palette.
+
+The procedure for creating a client flow and using it from a web browser is as follows.
+
+1. Click on `Create WoT client flow` that appears when you click on the menu icon in the upper right corner.  
+![Menu Cleate WoT Client Flow](screenshots/menu-create-wot-client-flow.png)
+1. When the dialog screen for entering the Thing Description appears, copy and paste the Thing Description and click the `OK` button.
+![Dialog for Create WoT Client Flow](screenshots/dialog-for-create-wot-client-flow.png)
+1. When the new flow screen appears, place the created flow.
+![Created WoT Client Flow](screenshots/created-wot-client-flow.png)
+1. Press the `Deploy` button to execute the created flow.
+1. Display the `Dashboard 2.0` tab and press the `Open Dashboard` button.
+![Dashboard tab](screenshots/dashboard-tab.png)
+1. The WoT client screen will appear in your web browser.
+![WoT Client Screen](screenshots/wot-client-screen.png)
+
+Feel free to modify the created flow to create a client screen of your choice.
