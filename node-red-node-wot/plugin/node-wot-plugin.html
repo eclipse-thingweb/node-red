@@ -1,0 +1,54 @@
+<script type="module" src="/resources/@thingweb/node-red-node-wot/node-wot-plugin-lib.js" ></script>
+<script type="module">
+    import {createClientFlowUsingDashboard} from "/resources/@thingweb/node-red-node-wot/node-wot-plugin-lib.js"
+    RED.plugins.registerPlugin("create-wot-client-flow", {
+        type: "create-client-flow",
+        onadd: function() {
+         const plugin = this
+          RED.actions.add("create-wot-client-flow:selected", function() {
+            const tdInputNotification = RED.notify(`
+                <div>
+                <div class="form-row">
+                    <div>Please paste a Thing Description.</div>
+                    <textarea id="td-string" placeholder="Thing Description" style="width:100%;" rows="8"></textarea>
+                </div>
+                </div>`,
+                {
+                    modal: true,
+                    fixed: true,
+                    type: 'success',
+                    buttons: [
+                        {
+                            text: "Cancel",
+                            click: function(e) {
+                                const existedNodes = RED.nodes.createCompleteNodeSet({ credentials: false })
+                                tdInputNotification.close();
+                            }
+                        },
+                        {
+                            text: "OK",
+                            class:"primary",
+                            click: function(e) {
+                                try {
+                                    const tdString = $("#td-string").val()
+                                    const existedNodes = RED.nodes.createCompleteNodeSet({ credentials: false })
+                                    createClientFlowUsingDashboard(tdString, existedNodes)
+                                    tdInputNotification.close();
+                                } catch(err) {
+                                    RED.notify(err.toString(), {type:"error", timeout:5000, modal:true})
+                                    console.error("error: ", err)
+                                }
+                            }
+                        }
+                    ]
+                });
+            });
+            RED.menu.addItem("red-ui-header-button-sidemenu", {
+                id: "menu-item-create-wot-client-flow",
+                label: "Create WoT client flow",
+                onselect: "create-wot-client-flow:selected"
+            });
+        }
+    });
+ </script>
+ 
