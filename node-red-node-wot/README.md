@@ -8,7 +8,7 @@ The package is built upon the [node-wot](https://github.com/eclipse-thingweb/nod
 
 ## Provided Nodes
 
-After installation, the package adds 8 different nodes at the Node-RED palette, all together scoped under the __Web of Things__ title.
+After installation, the package adds eight nodes at the Node-RED palette, each scoped under the __Web of Things__ title.
 Those nodes are as follows and needed to interact with different interaction affordances of a Thing:
 
 1) Read Property node;
@@ -29,8 +29,8 @@ Those nodes are as follows and needed to interact with different interaction aff
 ### Consume Things
 
 To consume a Thing and interact with it, drag and drop one of the interaction nodes to a flow.
-Then double click on that node.
-Inside the opened window click the pencil icon next to _Add new consumed-thing_ dropdown.
+Then, double-click on that node.
+Click the pencil icon next to the _Add new consumed-thing_ dropdown inside the opened window.
 
 ![Add new consumed Thing](screenshots/add-thing.png)
 
@@ -38,28 +38,28 @@ A new window will appear.
 
 ![Add Thing Description](screenshots/add-td.png)
 
-Now either copy-paste/type in a Thing Description inside the TD JSON box or fetch a Thing Description from a URL.
-**Tip:** In case you choose the first option, click on the three dots to expand the JSON editor.
+Now, copy-paste/type in a Thing Description inside the TD JSON box or fetch a Thing Description from a URL.
+**Tip:** If you choose the first option, click on the three dots to expand the JSON editor.
 
 After you click "Process"/"Fetch", all protocol bindings supported by the Thing will be enabled (except they are not supported by this package).
-Now you can leave only the bindings you need, and disable the others.
+Now, you can leave only the bindings you need and disable the others.
 Or you can leave them all as they are.
 Anyway, this can be changed at any time.
 
-If a Thing needs basic authentication (i.e. using username and password) for any of its interaction affordances, you can enable that in the respective checkbox.
+If a Thing needs basic authentication (i.e., using username and password) for any of its interaction affordances, you can enable that in the respective checkbox.
 **Note:** Only basic authentication is currently supported by this package.
 If you enable security, the nodes will automatically infer whether to use authentication for this particular affordance or not based on the provided Thing Description.
 
-Finally, click on the red "Add" button on the top right corner.
+Finally, click the red "Add" button in the top right corner.
 
 Now, for all WoT nodes you add to a flow, you will see all the respective interaction affordances populated from the Thing Description.
 
 You can also add more Things and choose a particular one for any node you add.
-To see a fetched property value you can wire it with the "debug" node of Node-RED, and see all the values inside the "Debug messages" tab of Node-RED.
+To see a fetched property value you can wire it with the "debug" node of Node-RED and see all the values inside the "Debug messages" tab of Node-RED.
 To write to a property, wire an "inject" node with the "Write Property" node.
 In the "inject" node, select JSON format as payload and plug in your value.
 
-To send an input for an action you can also wire it with the "inject" node as explained above.
+To send an input for an action, you can also wire it with the "inject" node, as explained above.
 **Tip:** To invoke an action that does not require any input, wire it with an empty "inject" node.
 
 Properties and Actions also support uriVariables.
@@ -73,7 +73,7 @@ Overall, a basic flow may look like this.
 
 ### Expose Things
 
-To expose a Thing, firstly, drag & drop one of the nodes belonging to the Thing, either Property(Server-Property), Action(Server-Action), or Event(Server-Event) to the canvas.
+To expose a Thing, firstly, drag & drop one of the nodes belonging to the Thing, either Property(Server-Property), Action(Server-Action), or Event(Server-Event), to the canvas.
 
 When you double-click on that node, a property screen appears.
 
@@ -82,7 +82,7 @@ When you double-click on that node, a property screen appears.
 On the properties screen, the `Server config` and `Thing config` must be configured. The roles of each config are as follows:
 
 * Server config: Set up the communication method between the client and the Thing.
-* Thing config: Set the attributes of the Thing such as the Thing title.
+* Thing config: Set the attributes of the Thing, such as the Thing title.
 
 By performing `Server config` and `Thing config` in the Server-Property, Server-Action, and Server-Event nodes, you determine how to publish properties, actions, and events.
 
@@ -142,25 +142,26 @@ Currently, the supported binding types are HTTP, CoAP, and MQTT. As shown in the
 
 Also, it is unclear how to define the flow when the data type is null.
 
-## Create WoT Client Flow Automaticaly
+## Plugin: Automatic WoT Consumer Flow Creation
 
-Provides the ability to automatically create client flows for WoT that can be used from a web browser.
+This plugin allows the automatic creation of Consumer flows with UIs for WoT Things.
+This UI can be from a web browser.
 
-Please install the `@flowfuse/node-red-dashboard` node beforehand.
-Nodes are installed by clicking on the menu icon in the upper right corner and then clicking on Manage palette.
+Please install the `@flowfuse/node-red-dashboard` node beforehand, as the UI functionality depends on it.
+Nodes are installed by clicking on the menu icon in the upper right corner and then clicking on the Manage palette.
 
-The procedure for creating a client flow and using it from a web browser is as follows.
+The procedure for creating a Consumer flow and using it from a web browser is as follows:
 
-1. Click on `Create WoT client flow` that appears when you click on the menu icon in the upper right corner.  
-![Menu Cleate WoT Client Flow](screenshots/menu-create-wot-client-flow.png)
-1. When the dialog screen for entering the Thing Description appears, copy and paste the Thing Description and click the `OK` button.
-![Dialog for Create WoT Client Flow](screenshots/dialog-for-create-wot-client-flow.png)
-1. When the new flow screen appears, place the created flow.
+1. Click on the `Create WoT Consumer flow` that appears when you click on the menu icon in the upper right corner.  
+![Menu Create WoT Client Flow](screenshots/menu-create-wot-client-flow.png)
+2. When the dialog screen for entering the Thing Description appears, copy and paste the Thing Description and click the `OK` button.
+![Dialog for Create WoT Consumer flow](screenshots/dialog-for-create-wot-client-flow.png)
+3. When the new flow screen appears, place the created flow.
 ![Created WoT Client Flow](screenshots/created-wot-client-flow.png)
-1. Press the `Deploy` button to execute the created flow.
-1. Display the `Dashboard 2.0` tab and press the `Open Dashboard` button.
+4. Press the `Deploy` button to execute the created flow.
+5. Display the `Dashboard 2.0` tab and press the `Open Dashboard` button.
 ![Dashboard tab](screenshots/dashboard-tab.png)
-1. The WoT client screen will appear in your web browser.
-![WoT Client Screen](screenshots/wot-client-screen.png)
+6. The WoT Consumer UI will appear in your web browser.
+![WoT Consumer UI](screenshots/wot-client-screen.png)
 
-Feel free to modify the created flow to create a client screen of your choice.
+Feel free to modify the created flow.
