@@ -49,13 +49,13 @@
     "test": "mocha --require ts-node/register --extension ts --exit"
   },
   "dependencies": {
-    "@node-wot/binding-coap": "0.8.12",
-    "@node-wot/binding-http": "0.8.12",
-    "@node-wot/binding-modbus": "0.8.12",
-    "@node-wot/binding-mqtt": "0.8.12",
-    "@node-wot/binding-opcua": "0.8.12",
-    "@node-wot/binding-websockets": "0.8.12",
-    "@node-wot/core": "0.8.12"
+    "@node-wot/binding-coap": "0.8.13",
+    "@node-wot/binding-http": "0.8.13",
+    "@node-wot/binding-modbus": "0.8.13",
+    "@node-wot/binding-mqtt": "0.8.13",
+    "@node-wot/binding-opcua": "0.8.13",
+    "@node-wot/binding-websockets": "0.8.13",
+    "@node-wot/core": "0.8.13"
   },
   "devDependencies": {
     "@types/chai": "^4.3.12",
