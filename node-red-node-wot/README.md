@@ -153,15 +153,15 @@ Nodes are installed by clicking on the menu icon in the upper right corner and t
 The procedure for creating a Consumer flow and using it from a web browser is as follows:
 
 1. Click on the `Create WoT Consumer flow` that appears when you click on the menu icon in the upper right corner.  
-![Menu Create WoT Client Flow](screenshots/menu-create-wot-client-flow.png)
+![Menu Create WoT Consumer Flow](screenshots/menu-create-wot-consumer-flow.png)
 2. When the dialog screen for entering the Thing Description appears, copy and paste the Thing Description and click the `OK` button.
-![Dialog for Create WoT Consumer flow](screenshots/dialog-for-create-wot-client-flow.png)
+![Dialog for Create WoT Consumer flow](screenshots/dialog-for-create-wot-consumer-flow.png)
 3. When the new flow screen appears, place the created flow.
-![Created WoT Client Flow](screenshots/created-wot-client-flow.png)
+![Created WoT Consumer Flow](screenshots/created-wot-consumer-flow.png)
 4. Press the `Deploy` button to execute the created flow.
 5. Display the `Dashboard 2.0` tab and press the `Open Dashboard` button.
 ![Dashboard tab](screenshots/dashboard-tab.png)
 6. The WoT Consumer UI will appear in your web browser.
-![WoT Consumer UI](screenshots/wot-client-screen.png)
+![WoT Consumer UI](screenshots/wot-consumer-screen.png)
 
 Feel free to modify the created flow.
