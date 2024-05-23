@@ -30,7 +30,7 @@ const DATATYPES = {
     },
     actionInputTypeNull: {
         inputMode: null,
-        typeConvert: null,
+        typeConvert: "",
     },
 }
 const COMMON_ID_COUNT = 7
@@ -1087,7 +1087,7 @@ const ACTION_BUTTON_TEMP = `[
         "type": "function",
         "z": "",
         "name": "change data type",
-        "func": "msg.payload = String(msg.payload)\\nreturn msg",
+        "func": "msg.payload = <%convert%>(msg.payload)\\nreturn msg",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
