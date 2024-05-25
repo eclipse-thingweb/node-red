@@ -24,14 +24,18 @@ const DATATYPES = {
         inputMode: "textarea",
         typeConvert: "JSON.parse",
     },
-    null: {
+    propertyTypeNull: {
         inputMode: "text",
         typeConvert: "JSON.parse",
     },
+    actionInputTypeNull: {
+        inputMode: null,
+        typeConvert: "",
+    },
 }
 const COMMON_ID_COUNT = 7
-const PROPERTY_ID_COUNT = 11
-const ACTION_ID_COUNT = 8
+const PROPERTY_ID_COUNT = 19
+const ACTION_ID_COUNT = 14
 const EVENT_ID_COUNT = 7
 
 /** initial y for putting node on canvas */
@@ -84,8 +88,8 @@ export const createClientFlowUsingDashboard = (tdString: string, existedNodes: a
                 ...commonParams,
                 propertyName,
                 propertyDescription: tdProperty.description,
-                inputMode: DATATYPES[tdProperty.type].inputMode,
-                convert: DATATYPES[tdProperty.type].typeConvert,
+                inputMode: DATATYPES[tdProperty.type || "propertyTypeNull"].inputMode,
+                convert: DATATYPES[tdProperty.type || "propertyTypeNull"].typeConvert,
             }
             flowAndOffsetY = makePropertyFlow(
                 commonGenIds,
@@ -108,10 +112,10 @@ export const createClientFlowUsingDashboard = (tdString: string, existedNodes: a
                 ...commonParams,
                 actionName,
                 actionDescription: tdAction.description,
-                inputMode: DATATYPES[tdAction.input.type].inputMode,
-                convert: DATATYPES[tdAction.input.type].typeConvert,
+                inputMode: DATATYPES[tdAction.input?.type || "actionInputTypeNull"].inputMode,
+                convert: DATATYPES[tdAction.input?.type || "actionInputTypeNull"].typeConvert,
             }
-            flowAndOffsetY = makeActionFlow(commonGenIds, actionGenIds, actionParams, flowAndOffsetY.offsetY)
+            flowAndOffsetY = makeActionFlow(commonGenIds, actionGenIds, actionParams, tdAction, flowAndOffsetY.offsetY)
             flow = flow.concat(flowAndOffsetY.flow)
         }
     }
@@ -247,9 +251,41 @@ const makePropertyFlow = (commonGenIds, propertyGenIds, params, tdProperty, offs
     return { flow, offsetY: flowAndOffsetY.offsetY }
 }
 
-const makeActionFlow = (commonGenIds, actionGenIds, params, offsetY) => {
-    let flowAndOffsetY = replaceParamsAndIds(ACTION_TEMP, params, commonGenIds, null, actionGenIds, null, offsetY)
-    return flowAndOffsetY
+const makeActionFlow = (commonGenIds, actionGenIds, params, tdAction, offsetY) => {
+    let flow = []
+    let flowAndOffsetY = replaceParamsAndIds(
+        ACTION_COMMON_TEMP,
+        params,
+        commonGenIds,
+        null,
+        actionGenIds,
+        null,
+        offsetY
+    )
+    flow = flow.concat(flowAndOffsetY.flow)
+    if (tdAction.input?.type) {
+        flowAndOffsetY = replaceParamsAndIds(
+            ACTION_ARGS_TEMP,
+            params,
+            commonGenIds,
+            null,
+            actionGenIds,
+            null,
+            flowAndOffsetY.offsetY
+        )
+        flow = flow.concat(flowAndOffsetY.flow)
+    }
+    flowAndOffsetY = replaceParamsAndIds(
+        ACTION_BUTTON_TEMP,
+        params,
+        commonGenIds,
+        null,
+        actionGenIds,
+        null,
+        flowAndOffsetY.offsetY
+    )
+    flow = flow.concat(flowAndOffsetY.flow)
+    return { flow, offsetY: flowAndOffsetY.offsetY }
 }
 
 const makeEventFlow = (commonGenIds, eventGenIds, params, offsetY) => {
@@ -458,7 +494,7 @@ const PROPERTY_COMMON_TEMP = `[
         "disabled": "false"
     },
     {
-        "id": "<%property-genid(10)%>>",
+        "id": "<%property-genid(2)%>",
         "type": "ui-text",
         "z": "",
         "group": "<%property-genid(1)%>",
@@ -481,7 +517,7 @@ const PROPERTY_COMMON_TEMP = `[
 ]`
 const PROPERTY_READ_TEMP = `[
     {
-        "id": "<%property-genid(2)%>",
+        "id": "<%property-genid(3)%>",
         "type": "ui-button",
         "z": "",
         "group": "<%property-genid(1)%>",
@@ -504,26 +540,8 @@ const PROPERTY_READ_TEMP = `[
         "y": <%y0%>,
         "wires": [
             [
-                "<%property-genid(3)%>"
-            ]
-        ]
-    },
-    {
-        "id": "<%property-genid(3)%>",
-        "type": "read-property",
-        "z": "",
-        "name": "",
-        "topic": "",
-        "thing": "<%common-genid(1)%>",
-        "property": "<%propertyName%>",
-        "uriVariables": "{}",
-        "observe": true,
-        "x": 480,
-        "y": <%y0%>,
-        "wires": [
-            [
-                "<%property-genid(6)%>",
-                "<%property-genid(4)%>"
+                "<%property-genid(4)%>",
+                "<%property-genid(6)%>"
             ]
         ]
     },
@@ -531,15 +549,15 @@ const PROPERTY_READ_TEMP = `[
         "id": "<%property-genid(4)%>",
         "type": "function",
         "z": "",
-        "name": "characterization",
-        "func": "msg.payload = JSON.stringify(msg.payload)\\nreturn msg",
+        "name": "invoke time",
+        "func": "msg.payload = \`property read invoked (\${new Date().toLocaleString()})\`\\nreturn msg",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
+        "x": 480,
         "y": <%y0%>,
         "wires": [
             [
@@ -549,6 +567,66 @@ const PROPERTY_READ_TEMP = `[
     },
     {
         "id": "<%property-genid(5)%>",
+        "type": "ui-text",
+        "z": "",
+        "group": "<%property-genid(1)%>",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": "16",
+        "color": "#717171",
+        "className": "",
+        "x": 780,
+        "y": <%y0%>,
+        "wires": []
+    },
+    {
+        "id": "<%property-genid(6)%>",
+        "type": "read-property",
+        "z": "",
+        "name": "",
+        "topic": "",
+        "thing": "<%common-genid(1)%>",
+        "property": "<%propertyName%>",
+        "uriVariables": "{}",
+        "observe": true,
+        "x": 480,
+        "y": <%y1%>,
+        "wires": [
+            [
+                "<%property-genid(7)%>",
+                "<%property-genid(9)%>"
+            ]
+        ]
+    },
+    {
+        "id": "<%property-genid(7)%>",
+        "type": "function",
+        "z": "",
+        "name": "characterization",
+        "func": "msg.payload = \`\${JSON.stringify(msg.payload)} (\${new Date().toLocaleString()})\`\\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": <%y1%>,
+        "wires": [
+            [
+                "<%property-genid(8)%>"
+            ]
+        ]
+    },
+    {
+        "id": "<%property-genid(8)%>",
         "type": "ui-text",
         "z": "",
         "group": "<%property-genid(1)%>",
@@ -565,14 +643,14 @@ const PROPERTY_READ_TEMP = `[
         "color": "#717171",
         "className": "",
         "x": 1080,
-        "y": <%y0%>,
+        "y": <%y1%>,
         "wires": []
     }
 ]`
 
 const PROPERTY_READ_CHART_TEMP = `[
     {
-        "id": "<%property-genid(6)%>",
+        "id": "<%property-genid(9)%>",
         "type": "ui-chart",
         "z": "",
         "group": "<%property-genid(1)%>",
@@ -619,34 +697,157 @@ const PROPERTY_READ_CHART_TEMP = `[
 
 const PROPERTY_WRITE_TEMP = `[
     {
-        "id": "<%property-genid(7)%>",
+        "id": "<%property-genid(10)%>",
         "type": "ui-text-input",
         "z": "",
         "group": "<%property-genid(1)%>",
         "name": "write data",
-        "label": "write data (input and press enter to execute)",
-        "order": 5,
-        "width": 0,
-        "height": 0,
+        "label": "write data",
+        "order": 6,
+        "width": "7",
+        "height": "1",
         "topic": "topic",
         "topicType": "msg",
         "mode": "<%inputMode%>",
         "delay": 300,
         "passthru": true,
         "sendOnDelay": false,
-        "sendOnBlur": false,
-        "sendOnEnter": true,
+        "sendOnBlur": true,
+        "sendOnEnter": false,
         "className": "",
         "x": 180,
         "y": <%y0%>,
         "wires": [
             [
-                "<%property-genid(8)%>"
+                "<%property-genid(11)%>"
             ]
         ]
     },
     {
-        "id": "<%property-genid(8)%>",
+        "id": "<%property-genid(11)%>",
+        "type": "change",
+        "z": "",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "propertyWriteValue_<%property-genid(12)%>",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": <%y0%>,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "<%property-genid(13)%>",
+        "type": "ui-button",
+        "z": "",
+        "group": "<%property-genid(1)%>",
+        "name": "",
+        "label": "write",
+        "order": 7,
+        "width": "5",
+        "height": "1",
+        "passthru": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 180,
+        "y": <%y1%>,
+        "wires": [
+            [
+                "<%property-genid(14)%>"
+            ]
+        ]
+    },
+    {
+        "id": "<%property-genid(14)%>",
+        "type": "change",
+        "z": "",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "propertyWriteValue_<%property-genid(12)%>",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": <%y1%>,
+        "wires": [
+            [
+                "<%property-genid(15)%>",
+                "<%property-genid(17)%>"
+            ]
+        ]
+    },
+    {
+        "id": "<%property-genid(15)%>",
+        "type": "function",
+        "z": "",
+        "name": "invoke time",
+        "func": "msg.payload = \`property write invoked (\${new Date().toLocaleString()})\`\\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": <%y1%>,
+        "wires": [
+            [
+                "<%property-genid(16)%>"
+            ]
+        ]
+    },
+    {
+        "id": "<%property-genid(16)%>",
+        "type": "ui-text",
+        "z": "",
+        "group": "<%property-genid(1)%>",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "className": "",
+        "x": 1080,
+        "y": <%y1%>,
+        "wires": []
+    },
+    {
+        "id": "<%property-genid(17)%>",
         "type": "function",
         "z": "",
         "name": "change data type",
@@ -657,16 +858,16 @@ const PROPERTY_WRITE_TEMP = `[
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": <%y0%>,
+        "x": 780,
+        "y": <%y2%>,
         "wires": [
             [
-                "<%property-genid(9)%>"
+                "<%property-genid(18)%>"
             ]
         ]
     },
     {
-        "id": "<%property-genid(9)%>",
+        "id": "<%property-genid(18)%>",
         "type": "write-property",
         "z": "",
         "name": "",
@@ -674,13 +875,13 @@ const PROPERTY_WRITE_TEMP = `[
         "thing": "<%common-genid(1)%>",
         "property": "<%propertyName%>",
         "uriVariables": "{}",
-        "x": 780,
-        "y": <%y0%>,
+        "x": 1080,
+        "y": <%y2%>,
         "wires": []
     }
 ]`
 
-const ACTION_TEMP = `[
+const ACTION_COMMON_TEMP = `[
     {
         "id": "<%action-genid(0)%>",
         "type": "comment",
@@ -705,7 +906,7 @@ const ACTION_TEMP = `[
         "disabled": "false"
     },
     {
-        "id": "<%action-genid(7)%>>",
+        "id": "<%action-genid(13)%>",
         "type": "ui-text",
         "z": "",
         "group": "<%action-genid(1)%>",
@@ -724,28 +925,31 @@ const ACTION_TEMP = `[
         "x": 180,
         "y": <%y1%>,
         "wires": []
-    },
+    }
+]`
+
+const ACTION_ARGS_TEMP = `[
     {
         "id": "<%action-genid(2)%>",
         "type": "ui-text-input",
         "z": "",
         "group": "<%action-genid(1)%>",
-        "name": "argument of action",
-        "label": "argument of action (input and press enter to execute)",
+        "name": "",
+        "label": "argument of action",
         "order": 2,
-        "width": 0,
-        "height": 0,
+        "width": "7",
+        "height": "1",
         "topic": "topic",
         "topicType": "msg",
         "mode": "<%inputMode%>",
         "delay": 300,
         "passthru": true,
         "sendOnDelay": false,
-        "sendOnBlur": false,
-        "sendOnEnter": true,
+        "sendOnBlur": true,
+        "sendOnEnter": false,
         "className": "",
         "x": 180,
-        "y": <%y2%>,
+        "y": <%y0%>,
         "wires": [
             [
                 "<%action-genid(3)%>"
@@ -754,6 +958,132 @@ const ACTION_TEMP = `[
     },
     {
         "id": "<%action-genid(3)%>",
+        "type": "change",
+        "z": "",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "actionArg_<%action-genid(4)%>",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": <%y0%>,
+        "wires": [
+            []
+        ]
+    }
+]`
+
+const ACTION_BUTTON_TEMP = `[
+    {
+        "id": "<%action-genid(5)%>",
+        "type": "ui-button",
+        "z": "",
+        "group": "<%action-genid(1)%>",
+        "name": "",
+        "label": "execute",
+        "order": 3,
+        "width": "5",
+        "height": "1",
+        "passthru": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 180,
+        "y": <%y0%>,
+        "wires": [
+            [
+                "<%action-genid(6)%>",
+                "<%action-genid(8)%>"
+            ]
+        ]
+    },
+    {
+        "id": "<%action-genid(6)%>",
+        "type": "function",
+        "z": "",
+        "name": "invoke time",
+        "func": "msg.payload = \`action invoked (\${new Date().toLocaleString()})\`\\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": <%y0%>,
+        "wires": [
+            [
+                "<%action-genid(7)%>"
+            ]
+        ]
+    },
+    {
+        "id": "<%action-genid(7)%>",
+        "type": "ui-text",
+        "z": "",
+        "group": "<%action-genid(1)%>",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "className": "",
+        "x": 780,
+        "y": <%y0%>,
+        "wires": []
+    },
+    {
+        "id": "<%action-genid(8)%>",
+        "type": "change",
+        "z": "",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "actionArg_<%action-genid(4)%>",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": <%y1%>,
+        "wires": [
+            [
+                "<%action-genid(9)%>"
+            ]
+        ]
+    },
+    {
+        "id": "<%action-genid(9)%>",
         "type": "function",
         "z": "",
         "name": "change data type",
@@ -764,16 +1094,16 @@ const ACTION_TEMP = `[
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": <%y2%>,
+        "x": 780,
+        "y": <%y1%>,
         "wires": [
             [
-                "<%action-genid(4)%>"
+                "<%action-genid(10)%>"
             ]
         ]
     },
     {
-        "id": "<%action-genid(4)%>",
+        "id": "<%action-genid(10)%>",
         "type": "invoke-action",
         "z": "",
         "name": "",
@@ -781,40 +1111,40 @@ const ACTION_TEMP = `[
         "thing": "<%common-genid(1)%>",
         "action": "<%actionName%>",
         "uriVariables": "{}",
-        "x": 780,
-        "y": <%y2%>,
+        "x": 1080,
+        "y": <%y1%>,
         "wires": [
             [
-                "<%action-genid(5)%>"
+                "<%action-genid(11)%>"
             ]
         ]
     },
     {
-        "id": "<%action-genid(5)%>",
+        "id": "<%action-genid(11)%>",
         "type": "function",
         "z": "",
         "name": "characterization",
-        "func": "msg.payload = JSON.stringify(msg.payload)\\nreturn msg",
+        "func": "msg.payload = \`\${JSON.stringify(msg.payload)} (\${new Date().toLocaleString()})\`\\nreturn msg",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1080,
-        "y": <%y2%>,
+        "x": 1380,
+        "y": <%y1%>,
         "wires": [
             [
-                "<%action-genid(6)%>"
+                "<%action-genid(12)%>"
             ]
         ]
     },
     {
-        "id": "<%action-genid(6)%>",
+        "id": "<%action-genid(12)%>",
         "type": "ui-text",
         "z": "",
         "group": "<%action-genid(1)%>",
-        "order": 3,
+        "order": 5,
         "width": 0,
         "height": 0,
         "name": "",
@@ -826,8 +1156,8 @@ const ACTION_TEMP = `[
         "fontSize": 16,
         "color": "#717171",
         "className": "",
-        "x": 1380,
-        "y": <%y2%>,
+        "x": 1680,
+        "y": <%y1%>,
         "wires": []
     }
 ]`
@@ -857,7 +1187,7 @@ const EVENT_TEMP = `[
         "disabled": "false"
     },
     {
-        "id": "<%event-genid(6)%>>",
+        "id": "<%event-genid(6)%>",
         "type": "ui-text",
         "z": "",
         "group": "<%event-genid(1)%>",

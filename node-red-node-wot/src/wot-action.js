@@ -39,8 +39,12 @@ module.exports = function (RED) {
                 .then(async (resp) => {
                     let payload
                     try {
-                        payload = await resp.value()
-                        node.send({ payload: payload, topic: config.topic })
+                        if (resp.schema) {
+                            payload = await resp.value()
+                            node.send({ payload: payload, topic: config.topic })
+                        } else {
+                            node.send({ payload: null, topic: config.topic })
+                        }
                         node.status({
                             fill: "green",
                             shape: "dot",
