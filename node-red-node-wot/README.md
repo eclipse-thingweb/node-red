@@ -1,8 +1,11 @@
 # Node-RED Packages of node-wot
 
+[![Telegram Group](https://img.shields.io/endpoint?color=neon&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2Fnodewot)](https://t.me/nodewot)
+[![Discord](https://img.shields.io/badge/Discord-7289DA?logo=discord&logoColor=white&label=node-wot)](https://discord.gg/JXY2Jzefz3)
+
 A [Node-RED](https://nodered.org/) package of nodes for the [Web of Things](https://www.w3.org/WoT/).
 
-Can be installed from the Node-RED palette manager directly or via npm (see [the npm package](https://www.npmjs.com/package/@thingweb/node-red-node-wot)).
+Can be installed from the Node-RED palette manager directly (see [the Node-RED library entry](https://flows.nodered.org/node/@thingweb/node-red-node-wot)) or via npm (see [the npm package](https://www.npmjs.com/package/@thingweb/node-red-node-wot)).
 The package provides nodes that can communicate with any HTTP/HTTPS, WebSocket, CoAP/CoAPS, MQTT, OPC UA, and Modbus device based on its [W3C WoT Thing Description](https://www.w3.org/TR/wot-thing-description/).
 The package is built upon the [node-wot](https://github.com/eclipse-thingweb/node-wot) runtime environment.
 
@@ -22,7 +25,7 @@ Those nodes are as follows and needed to interact with different interaction aff
 1) Server-Event node;
 1) Server-TD node.
 
-![WoT nodes](screenshots/nodes.png)
+![WoT nodes](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/nodes.png)
 
 ## Getting Started
 
@@ -32,11 +35,11 @@ To consume a Thing and interact with it, drag and drop one of the interaction no
 Then, double-click on that node.
 Click the pencil icon next to the _Add new consumed-thing_ dropdown inside the opened window.
 
-![Add new consumed Thing](screenshots/add-thing.png)
+![Add new consumed Thing](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/add-thing.png)
 
 A new window will appear.
 
-![Add Thing Description](screenshots/add-td.png)
+![Add Thing Description](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/add-td.png)
 
 Now, copy-paste/type in a Thing Description inside the TD JSON box or fetch a Thing Description from a URL.
 **Tip:** If you choose the first option, click on the three dots to expand the JSON editor.
@@ -126,7 +129,7 @@ Also, the client can use the Update TD node to replace the Thing Description. Fo
 
 You can get the Example from the Import menu of the Node-RED editor for reference.
 
-![Import Example Flows](screenshots/import-example-flows.png)
+![Import Example Flows](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/import-example-flows.png)
 
 Currently, the supported binding types are HTTP, CoAP, and MQTT. As shown in the table below, each of these types of bindings has its own available/unavailable functions. Available functions are denoted by `✓` and unavailable functions are denoted by `-`.
 
