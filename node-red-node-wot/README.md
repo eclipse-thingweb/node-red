@@ -43,9 +43,8 @@ A new window will appear.
 
 Now, copy-paste/type in a Thing Description inside the TD JSON box or fetch a Thing Description from a URL.
 **Tip:** If you choose the first option, click on the three dots to expand the JSON editor.
-
-After you click "Process"/"Fetch", all protocol bindings supported by the Thing will be enabled (except they are not supported by this package).
-Now, you can leave only the bindings you need and disable the others.
+After you click "Process"/"Fetch", all protocol bindings supported by the Thing will be enabled (except this package does not support them).
+Now, you can leave only the necessary bindings and disable the others.
 Or you can leave them all as they are.
 Anyway, this can be changed at any time.
 
@@ -58,12 +57,12 @@ Finally, click the red "Add" button in the top right corner.
 Now, for all WoT nodes you add to a flow, you will see all the respective interaction affordances populated from the Thing Description.
 
 You can also add more Things and choose a particular one for any node you add.
-To see a fetched property value you can wire it with the "debug" node of Node-RED and see all the values inside the "Debug messages" tab of Node-RED.
-To write to a property, wire an "inject" node with the "Write Property" node.
-In the "inject" node, select JSON format as payload and plug in your value.
+To see a fetched property value, you can wire it with the "debug" node of Node-RED and see all the values inside the "Debug messages" tab of Node-RED.
+Wire an "inject" node with the "Write Property" node to write to a property.
+Select JSON format as payload in the "inject" node and plug in your value.
 
 To send an input for an action, you can also wire it with the "inject" node, as explained above.
-**Tip:** To invoke an action that does not require any input, wire it with an empty "inject" node.
+**Tip:** To invoke an action that does not require input, wire it with an empty "inject" node.
 
 Properties and Actions also support uriVariables.
 They can be specified inside "Read Property"/"Write Property"/"Invoke Action" node properties.
@@ -85,11 +84,10 @@ When you double-click on that node, a property screen appears.
 On the properties screen, the `Server config` and `Thing config` must be configured. The roles of each config are as follows:
 
 * Server config: Set up the communication method between the client and the Thing.
-* Thing config: Set the attributes of the Thing, such as the Thing title.
+* Thing config: Set the Thing attributes, such as the Thing title.
 
 By performing `Server config` and `Thing config` in the Server-Property, Server-Action, and Server-Event nodes, you determine how to publish properties, actions, and events.
-
-If you create a new server config on the properties screen, the following screen will appear.
+The following screen will appear if you create a new server config on the properties screen.
 
 ![Server Config Screen](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/server-config-settings.png)
 
@@ -109,7 +107,8 @@ Description and Thing ID are optional; if Thing ID is not specified, Thing ID wi
 
 Server config and Thing config can be shared across multiple Server-Property, Server-Action, and Server-Event nodes. By sharing configs, you can publish one or more properties, actions, and events to the client as a single Thing.
 
-In addition to server config and Thing config, there are necessary settings for each Server-Property, Server-Action, and Server-Event node. For the settings of each node, refer to the node help. Help can be viewed on the Node-RED editor's Help tab.
+In addition to server config and Thing config, there are necessary settings for each Server-Property, Server-Action, and Server-Event node. For the settings of each node, refer to the node help.
+Help can be viewed on the Node-RED editor's Help tab.
 
 The Server-End node represents the end of a flow executed by a client request.
 Flows connected to the two output terminals of the Server-Property node (read/write requests) and the output terminal of the Server-Action node must end with the Server-End node.
@@ -125,13 +124,13 @@ If you want to check the Thing Description, open the Context Data tab of the Nod
 
 The Thing Description can also be obtained using the Server-TD node.
 
-Also, the client can use the Update TD node to replace the Thing Description. For example, if the server URL is changed, the destination server can be changed without restarting the flow.
+Also, the client can use the Update TD node to replace the Thing Description. For example, if the server URL changes, the destination server can be changed without restarting the flow.
 
 You can get the Example from the Import menu of the Node-RED editor for reference.
 
 ![Import Example Flows](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/import-example-flows.png)
 
-Currently, the supported binding types are HTTP, CoAP, and MQTT. As shown in the table below, each of these types of bindings has its own available/unavailable functions. Available functions are denoted by `✓` and unavailable functions are denoted by `-`.
+Currently, the supported binding types are HTTP, CoAP, and MQTT. As shown in the table below, each of these bindings has its own available/unavailable functions. Available functions are denoted by `✓` and unavailable functions are denoted by `-`.
 
 | |http|coap|mqtt|
 | :---: | :--- | :--- | :--- |
@@ -155,16 +154,16 @@ Nodes are installed by clicking on the menu icon in the upper right corner and t
 
 The procedure for creating a Consumer flow and using it from a web browser is as follows:
 
-1. Click on the `Create WoT Consumer flow` that appears when you click on the menu icon in the upper right corner.  
-![Menu Create WoT Consumer Flow](screenshots/menu-create-wot-consumer-flow.png)
+1. Click on the `Create WoT Consumer flow` when you click on the menu icon in the upper right corner.  
+![Menu Create WoT Consumer Flow](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/menu-create-wot-consumer-flow.png)
 2. When the dialog screen for entering the Thing Description appears, copy and paste the Thing Description and click the `OK` button.
-![Dialog for Create WoT Consumer flow](screenshots/dialog-for-create-wot-consumer-flow.png)
+![Dialog for Create WoT Consumer flow](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/dialog-for-create-wot-consumer-flow.png)
 3. When the new flow screen appears, place the created flow.
-![Created WoT Consumer Flow](screenshots/created-wot-consumer-flow.png)
+![Created WoT Consumer Flow](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/created-wot-consumer-flow.png)
 4. Press the `Deploy` button to execute the created flow.
 5. Display the `Dashboard 2.0` tab and press the `Open Dashboard` button.
-![Dashboard tab](screenshots/dashboard-tab.png)
+![Dashboard tab](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/dashboard-tab.png)
 6. The WoT Consumer UI will appear in your web browser.
-![WoT Consumer UI](screenshots/wot-consumer-screen.png)
+![WoT Consumer UI](https://raw.githubusercontent.com/eclipse-thingweb/node-red/main/node-red-node-wot/screenshots/wot-consumer-screen.png)
 
 Feel free to modify the created flow.
