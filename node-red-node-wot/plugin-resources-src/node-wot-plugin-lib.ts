@@ -88,6 +88,7 @@ export const createClientFlowUsingDashboard = (tdString: string, existedNodes: a
                 ...commonParams,
                 propertyName,
                 propertyDescription: tdProperty.description,
+                propertyObserve: tdProperty.observable,
                 inputMode: DATATYPES[tdProperty.type || "propertyTypeNull"].inputMode,
                 convert: DATATYPES[tdProperty.type || "propertyTypeNull"].typeConvert,
             }
@@ -595,7 +596,7 @@ const PROPERTY_READ_TEMP = `[
         "thing": "<%common-genid(1)%>",
         "property": "<%propertyName%>",
         "uriVariables": "{}",
-        "observe": true,
+        "observe": <%propertyObserve%>,
         "x": 480,
         "y": <%y1%>,
         "wires": [
