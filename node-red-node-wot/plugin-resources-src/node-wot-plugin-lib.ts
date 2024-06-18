@@ -14,7 +14,7 @@ const DATATYPES = {
     },
     boolean: {
         inputMode: "text",
-        typeConvert: "String",
+        typeConvert: "JSON.parse",
     },
     object: {
         inputMode: "textarea",
