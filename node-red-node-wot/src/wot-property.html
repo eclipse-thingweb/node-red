@@ -37,20 +37,7 @@
             $("div#property-row").hide()
 
             $("#node-input-property").change(function () {
-                let property = this.value
-                let thingID = $("select#node-input-thing").val()
-                if (thingID) {
-                    RED.nodes.eachConfig((config) => {
-                        if (config.id === thingID && config.td) {
-                            let properties = JSON.parse(config.td).properties || {}
-                            if (properties[property] && properties[property].observable) {
-                                $("div#property-observe").show()
-                            } else {
-                                $("div#property-observe").hide()
-                            }
-                        }
-                    })
-                }
+                showOrHideObserveCheckbox()
             })
 
             $("select#node-input-thing").change(function () {
@@ -60,6 +47,24 @@
                     hideOptions()
                 }
             })
+
+            function showOrHideObserveCheckbox() {
+                let property = $("#node-input-property").val()
+                let thingID = $("select#node-input-thing").val()
+                if (thingID) {
+                    RED.nodes.eachConfig((config) => {
+                        if (config.id === thingID && config.td) {
+                            let properties = JSON.parse(config.td).properties || {}
+                            if (properties[property] && properties[property].observable) {
+                                $("div#property-observe").show()
+                            } else {
+                                $("#node-input-observe").removeAttr("checked").prop("checked", false).change()
+                                $("div#property-observe").hide()
+                            }
+                        }
+                    })
+                }
+            }
 
             function showOptions() {
                 let thingID = $("select#node-input-thing").val()
@@ -86,6 +91,7 @@
                             })
                             // Show containing div
                             $("div#property-row").show()
+                            showOrHideObserveCheckbox()
                         }
                     })
                 }
