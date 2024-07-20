@@ -8,13 +8,14 @@ module.exports = function (RED) {
 
         // for wot-server-config
         node.getProps = () => {
+            const type = config.propertyDataType === "null" ? undefined : config.propertyDataType
             return {
                 attrType: "properties",
                 name: config.propertyName,
                 outputAttr: config.outParams2_writingValueConstValue,
                 content: {
                     description: config.propertyDescription,
-                    type: config.propertyDataType,
+                    type,
                     readOnly: config.propertyReadOnlyFlag,
                     observable: config.propertyObservableFlag,
                 },

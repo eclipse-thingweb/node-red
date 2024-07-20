@@ -120,6 +120,7 @@ module.exports = function (RED) {
                         shape: "ring",
                         text: "Response error",
                     })
+                    console.error(err)
                     done(err)
                 })
         })
@@ -189,6 +190,7 @@ module.exports = function (RED) {
                         shape: "ring",
                         text: err.message,
                     })
+                    console.error(err)
                     done(err)
                 })
         })

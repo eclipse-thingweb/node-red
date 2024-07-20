@@ -63,6 +63,7 @@ module.exports = function (RED) {
                         shape: "ring",
                         text: err.message,
                     })
+                    console.error(err)
                     done(err)
                 })
         })

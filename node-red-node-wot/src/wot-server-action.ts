@@ -6,18 +6,21 @@ module.exports = function (RED) {
 
         // for wot-server-config
         node.getProps = () => {
+            const input = config.actionInputDataType === "null" ? undefined : { type: config.actionInputDataType }
+            const output =
+                config.actionOutputDataType === "null"
+                    ? undefined
+                    : {
+                          type: config.actionOutputDataType,
+                      }
             return {
                 attrType: "actions",
                 name: config.actionName,
                 outputArgs: config.outParams1_actionArgsConstValue,
                 content: {
                     description: config.actionDescription,
-                    input: {
-                        type: config.actionInputDataType,
-                    },
-                    output: {
-                        type: config.actionOutputDataType,
-                    },
+                    input,
+                    output,
                 },
             }
         }

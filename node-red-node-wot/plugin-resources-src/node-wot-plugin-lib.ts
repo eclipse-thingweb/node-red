@@ -109,12 +109,13 @@ export const createClientFlowUsingDashboard = (tdString: string, existedNodes: a
                 actionGenIds.push(generateId())
             }
             const tdAction = td.actions[actionName]
+            let actionInputType = tdAction.input?.type || "actionInputTypeNull"
             const actionParams = {
                 ...commonParams,
                 actionName,
                 actionDescription: tdAction.description,
-                inputMode: DATATYPES[tdAction.input?.type || "actionInputTypeNull"].inputMode,
-                convert: DATATYPES[tdAction.input?.type || "actionInputTypeNull"].typeConvert,
+                inputMode: DATATYPES[actionInputType].inputMode,
+                convert: DATATYPES[actionInputType].typeConvert,
             }
             flowAndOffsetY = makeActionFlow(commonGenIds, actionGenIds, actionParams, tdAction, flowAndOffsetY.offsetY)
             flow = flow.concat(flowAndOffsetY.flow)
@@ -264,7 +265,7 @@ const makeActionFlow = (commonGenIds, actionGenIds, params, tdAction, offsetY) =
         offsetY
     )
     flow = flow.concat(flowAndOffsetY.flow)
-    if (tdAction.input?.type) {
+    if (params.inputMode) {
         flowAndOffsetY = replaceParamsAndIds(
             ACTION_ARGS_TEMP,
             params,
