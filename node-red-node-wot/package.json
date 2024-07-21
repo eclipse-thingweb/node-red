@@ -55,7 +55,8 @@
     "@node-wot/binding-mqtt": "0.8.14",
     "@node-wot/binding-opcua": "0.8.14",
     "@node-wot/binding-websockets": "0.8.14",
-    "@node-wot/core": "0.8.14"
+    "@node-wot/core": "0.8.14",
+    "@thingweb/td-utils": "^1.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.12",

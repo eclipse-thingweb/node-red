@@ -1,3 +1,5 @@
+import { detectProtocolSchemes } from "@thingweb/td-utils/build";
+
 const PROTOCOLS = ["http", "ws", "coap", "mqtt", "opcua", "modbus"]
 const DATATYPES = {
     string: {
@@ -315,52 +317,14 @@ function generateId() {
 }
 
 function checkBinding(tdStr: string, binding: string) {
-    let td
-    try {
-        td = JSON.parse(tdStr)
-    } catch (err) {
-        return false
-    }
-
-    const affordances = ["properties", "actions", "events"]
     // In case of OPC UA we look for opc.tcp in href not opcua
     binding = binding === "opcua" ? "opc.tcp" : binding
     // Also different for Modbus
     binding = binding === "modbus" ? "modbus+tcp" : binding
 
-    // Check base URL if present and then possibly affordances
-    if (td["base"]) {
-        let base = new URL(td["base"]).protocol
-        if (base) {
-            // remove trailing ':'
-            base = base.slice(0, -1)
-            const checkBase = base === binding || base === binding + "s"
-            if (checkBase) return true
-        }
-    }
-
-    for (const affordance of affordances) {
-        if (td[affordance]) {
-            // item is either a property or an action or an event
-            for (const item of Object.values(td[affordance])) {
-                if (!(item as any).forms) return false
-                let checkForms = (item as any).forms.some((form) => {
-                    try {
-                        const parsed = new URL(form.href)
-                        if (parsed.protocol !== null) {
-                            // remove trailing ':'
-                            const scheme = parsed.protocol.slice(0, -1)
-                            return scheme === binding || scheme === binding + "s"
-                        }
-                    } catch (e) {
-                        return false
-                    }
-                })
-                if (checkForms) return true
-            }
-        }
-    }
-    return false
+    const bindings = Object.keys(detectProtocolSchemes(tdStr))
+    
+    return bindings.includes(binding)
 }
 
 const THING_COMMON_TEMP = `[
