@@ -324,7 +324,7 @@ function checkBinding(tdStr: string, binding: string) {
 
     const bindings = Object.keys(detectProtocolSchemes(tdStr))
     
-    return bindings.some(b => b === binding || b === binding + 's');
+    return bindings.some(b => b === binding || b === binding + 's')
 }
 
 const THING_COMMON_TEMP = `[
