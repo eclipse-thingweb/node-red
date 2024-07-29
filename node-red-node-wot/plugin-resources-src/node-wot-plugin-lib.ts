@@ -1,5 +1,3 @@
-import { detectProtocolSchemes } from "@thingweb/td-utils/build";
-
 const PROTOCOLS = ["http", "ws", "coap", "mqtt", "opcua", "modbus"]
 const DATATYPES = {
     string: {
@@ -316,6 +314,8 @@ function generateId() {
     return bytes.join("")
 }
 
+const detectProtocolSchemes = (window as any).tdUtils?.detectProtocolSchemes;
+
 function checkBinding(tdStr: string, binding: string) {
     // In case of OPC UA we look for opc.tcp in href not opcua
     binding = binding === "opcua" ? "opc.tcp" : binding
@@ -324,7 +324,7 @@ function checkBinding(tdStr: string, binding: string) {
 
     const bindings = Object.keys(detectProtocolSchemes(tdStr))
     
-    return bindings.includes(binding)
+    return bindings.some(b => b === binding || b === binding + 's');
 }
 
 const THING_COMMON_TEMP = `[
