@@ -43,7 +43,7 @@
     "build": "npm run copy:src2dist && tsc && npm run build:plugin",
     "copy:src2dist": "node -e \"require('fs-extra').copySync('./src', './dist')\"",
     "build:plugin": "npm run copy:plugin-resources-src2resources && tsc --project ./tsconfig-for-plugin.json",
-    "copy:plugin-resources-src2resources": "node -e \"require('fs-extra').copySync('./plugin-resources-src', './resources')\"",
+    "copy:plugin-resources-src2resources": "node -e \"require('fs-extra').copySync('./plugin-resources-src', './resources')\" && node -e \"require('fs-extra').copySync('./node_modules/@thingweb/td-utils/dist/web-bundle.min.js', './resources/@thingweb/td-utils/dist/web-bundle.min.js')\"",
     "publish": "npm publish --access=public",
     "publish:beta": "npm publish --access=public --tag=beta",
     "test": "mocha --require ts-node/register --extension ts --exit"
@@ -55,7 +55,8 @@
     "@node-wot/binding-mqtt": "0.8.14",
     "@node-wot/binding-opcua": "0.8.14",
     "@node-wot/binding-websockets": "0.8.14",
-    "@node-wot/core": "0.8.14"
+    "@node-wot/core": "0.8.14",
+    "@thingweb/td-utils": "^1.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.12",
