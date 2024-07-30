@@ -88,7 +88,7 @@ export const createClientFlowUsingDashboard = (tdString: string, existedNodes: a
                 ...commonParams,
                 propertyName,
                 propertyDescription: tdProperty.description,
-                propertyObserve: tdProperty.observable,
+                propertyObserve: tdProperty.observable || false,
                 inputMode: DATATYPES[tdProperty.type || "propertyTypeNull"].inputMode,
                 convert: DATATYPES[tdProperty.type || "propertyTypeNull"].typeConvert,
             }
