@@ -11,8 +11,8 @@ The package is built upon the [node-wot](https://github.com/eclipse-thingweb/nod
 
 ## Provided Nodes
 
-After installation, the package adds eight nodes at the Node-RED palette, each scoped under the __Web of Things__ title.
-Those nodes are as follows and needed to interact with different interaction affordances of a Thing:
+After installation, the package adds several nodes to the Node-RED palette, all grouped under the Web of Things title. 
+These nodes are designed to interact with the various interaction affordances of a Thing:
 
 1) Read Property node;
 1) Write Property node;
